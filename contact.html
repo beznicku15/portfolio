@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>portfolio-contact</title>
+</head>
+<body>
+
+    <header>
+          <div class="button-container">
+                <a href="projects.html"><button>PROJECTS</button><span class="indicator"></span></a>
+                <a href="index.html"><button>HOME</button><span class="indicator"></span></a>
+                <a href="contact.html"><button>CONTACT</button><span class="indicator"></span></a>
+                <button id="theme-toggle" class="theme-toggle-button">🌙</button>
+            </div>
+    </header>
+
+    <main class="contact-container">
+        <div class="contact-card">
+            <h2>Skontaktuj się ze mną</h2>
+            <p>Jeśli masz pytania lub propozycje współpracy, skontaktuj się ze mną:</p>
+            <p>Email: <a href="mailto:kubaplawecki83@gmail.com" class="contact-link">kubaplawecki83@gmail.com</a></p>
+            <p>Discord: <a href="https://discord.com" class="contact-link">bez_nicku</a></p>
+            <p>GitHub: <a href="https://github.com/beznicku15" class="contact-link">beznicku15</a></p>
+        </div>
+    </main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('.button-container a');
+
+        links.forEach(link => {
+            const linkPath = new URL(link.href).pathname;
+            if (currentPath.endsWith(linkPath) || (currentPath === '/' && linkPath.endsWith('main.html'))) {
+                const indicator = link.querySelector('.indicator');
+                if (indicator) {
+                    indicator.classList.add('active');
+                }
+            }
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        } else {
+             themeToggle.textContent = '🌙';
+        }
+
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

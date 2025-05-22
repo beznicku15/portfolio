@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>portfolio-projects</title>
+</head>
+<body>
+
+    <header>
+          <div class="button-container">
+                <a href="projects.html"><button>PROJECTS</button><span class="indicator"></span></a>
+                <a href="index.html"><button>HOME</button><span class="indicator"></span></a>
+                <a href="contact.html"><button>CONTACT</button><span class="indicator"></span></a>
+                <button id="theme-toggle" class="theme-toggle-button">🌙</button>
+            </div>
+    </header>
+
+    <main class="projects-container">
+        <div class="project-card">
+            <div class="project-gradient"></div>
+            <div class="project-content">
+                <h2>Wrzuta 1TP</h2>
+                <p>Wrzuta 1TP to projekt strony na ktorej mozna wrzucac zadania oraz je pobierac.</p>
+                <div class="project-tech">
+                    <span class="tech-square">HTML</span>
+                    <span class="tech-square">CSS</span>
+                    <span class="tech-square">JavaScript</span>
+                    <span class="tech-square">Node</span>
+                </div>
+                <a href="#" class="project-link">Zobacz Projekt</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+             <div class="project-gradient"></div>
+            <div class="project-content">
+                <h2>Discord bot</h2>
+                <p>Bot Discord do sklepu oraz zarzadzania serverem.</p>
+                 <div class="project-tech">
+                    <span class="tech-square">Python</span>
+                </div>
+                <a href="#" class="project-link">Zobacz Projekt</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+             <div class="project-gradient"></div>
+            <div class="project-content">
+                <h2>SOON</h2>
+                <p>w produkcji...</p>
+                 <div class="project-tech">
+                    <span class="tech-square">HTML</span>
+                    <span class="tech-square">CSS</span>
+                </div>
+                <a href="#" class="project-link">Zobacz Projekt</a>
+            </div>
+        </div>
+
+    </main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('.button-container a');
+
+        links.forEach(link => {
+            const linkPath = new URL(link.href).pathname;
+            if (currentPath.endsWith(linkPath) || (currentPath === '/' && linkPath.endsWith('main.html'))) {
+                const indicator = link.querySelector('.indicator');
+                if (indicator) {
+                    indicator.classList.add('active');
+                }
+            }
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        } else {
+             themeToggle.textContent = '🌙';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
