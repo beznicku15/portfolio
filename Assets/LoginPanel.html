@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Login Panel</title>
+</head>
+<body>
+    
+    <style>
+
+        body{
+            background: #050a10;
+            color: #e7e7e7;
+        }
+
+        .login-panel {
+            width: 20rem;
+            height: 25rem;
+            margin: 20rem auto;
+            padding: 2rem;
+            border: 2px solid rgba(0, 229, 255, 0.25);
+            background-color: #1b1b1b;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .login-panel h2 {
+            text-align: center;
+            font-size: 50px;
+            font-weight: 900;
+            margin-top: -0.7rem;
+        }
+
+        .login-panel form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            width: 90%;
+            margin: 1rem auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e7e7e7;
+            pointer-events: none;
+        }
+
+        .login-panel input {
+            width: 100%;
+            padding: 0.8rem 0.8rem 0.8rem 2.8rem; 
+            margin: 0 auto;
+            border: 2px solid #00e5ff;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background: transparent;
+            color: #e7e7e7;
+            transition: all 0.3s ease
+        }
+
+        .login-panel input:hover {
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);    
+        }
+
+        .login-panel input:focus {
+            outline: none;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.25);
+            border-color: #00e5ff;
+        }
+
+        .login-btn {
+            width: 80%;
+            padding: 0.9rem 1.5rem;
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e7e7e7;
+            border: 2px solid #00e5ff;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #00e5ff 0%, #00b4d4 100%);
+            color: #050a10;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .form-options {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #e7e7e7;
+            user-select: none;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            accent-color: #00e5ff;
+        }
+
+        .remember-me span {
+            transition: var(--transition);
+        }
+
+        .remember-me:hover span {
+            color: #00e5ff;
+        }
+
+        .forgot-password {
+            color: #e7e7e7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #00e5ff;
+            text-decoration: underline;
+        }
+
+    </style>
+
+    <div class="login-panel">
+        <h2>Login</h2>
+        <form action="#" method="post">
+            <div class="input-wrapper">
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                <input type="text" id="username" name="username" required placeholder="Username">
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <input type="password" id="password" name="password" required placeholder="Password">
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" id="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+
+</body>
+</html>

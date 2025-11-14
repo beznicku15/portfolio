@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin panel — bez_nicku</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="AdminPanel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <h1>Admin Panel</h1>
+        <div class="brand-sub">beznicku • control</div>
+
+        <ul class="nav-menu" role="menu">
+            <li><a href="#dashboard" class="active" role="menuitem"><i class="fa-solid fa-gauge"></i>Dashboard</a></li>
+            <li><a href="#users" role="menuitem"><i class="fa-solid fa-users"></i>Users</a></li>
+            <li><a href="#settings" role="menuitem"><i class="fa-solid fa-gear"></i>Settings</a></li>
+            <li><a href="#moderation" role="menuitem"><i class="fa-solid fa-shield-halved"></i>Moderation</a></li>
+            <li><a href="#logs" role="menuitem"><i class="fa-solid fa-file-lines"></i>Logs</a></li>
+            <li><a href="#logout" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <main class="content" id="mainContent">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="admin-card">
+            <h2 style="color:var(--accent)">Dashboard</h2>
+            <p style="color:var(--muted);margin-bottom:.75rem">Overview and quick stats</p>
+
+            <div class="admin-grid" style="margin-top:1rem">
+                <div class="stat admin-card">
+                    <h3>Active Users</h3>
+                    <div class="value">1,234</div>
+                    <div class="badge">+3.2% (7d)</div>
+                </div>
+
+                <div class="stat admin-card">
+                    <h3>New Signups</h3>
+                    <div class="value" style="color:#7ee787">78</div>
+                    <div style="color:var(--muted);font-size:.9rem;margin-top:.35rem">Last 24h</div>
+                </div>
+
+                <div class="stat admin-card">
+                    <h3>Errors</h3>
+                    <div class="value" style="color:#ff7b7b">3</div>
+                    <div style="color:var(--muted);font-size:.9rem;margin-top:.35rem">Last 24h</div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-top:1rem">
+                <div class="admin-card">
+                    <h3 style="margin-bottom:.5rem">Recent Activity</h3>
+                    <ul class="recent-activity">
+                        <li><span class="muted">12:14</span> User <strong>alice</strong> uploaded project</li>
+                        <li><span class="muted">11:58</span> New user <strong>carol</strong> registered</li>
+                        <li><span class="muted">10:05</span> Backup completed</li>
+                        <li><span class="muted">09:41</span> Scheduled job started</li>
+                    </ul>
+                </div>
+
+                <div class="admin-card">
+                    <h3 style="margin-bottom:.5rem">System Health</h3>
+                    <div class="health-row"><label>CPU</label><div class="progress"><div class="progress-bar" style="width:36%"></div></div></div>
+                    <div class="health-row"><label>Memory</label><div class="progress"><div class="progress-bar" style="width:68%"></div></div></div>
+                    <div class="health-row"><label>Disk</label><div class="progress"><div class="progress-bar" style="width:52%"></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USERS -->
+        <section id="users" class="admin-card hidden" style="margin-top:1rem">
+            <h2 style="color:var(--accent)">Users</h2>
+            <p style="color:var(--muted);margin-bottom:.6rem">Search, view and manage users</p>
+
+            <div style="display:flex;gap:.75rem;align-items:center;margin-top:.75rem">
+                <input id="userSearch" type="search" placeholder="Search users..." class="input-inline">
+                <button id="addUserBtn" class="btn">Add user</button>
+            </div>
+
+            <div style="overflow:auto;margin-top:1rem">
+                <table class="table">
+                    <thead>
+                        <tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr>
+                            <td><strong>alice</strong></td>
+                            <td>alice@example.com</td>
+                            <td>Admin</td>
+                            <td><span class="badge" style="background:rgba(126,231,135,0.06);color:#7ee787">Active</span></td>
+                            <td><button class="btn small">Edit</button> <button class="btn small ghost">Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>bob</strong></td>
+                            <td>bob@example.com</td>
+                            <td>Moderator</td>
+                            <td><span class="badge" style="background:rgba(255,123,123,0.06);color:#ff7b7b">Banned</span></td>
+                            <td><button class="btn small">Edit</button> <button class="btn small ghost">Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>carol</strong></td>
+                            <td>carol@example.com</td>
+                            <td>User</td>
+                            <td><span class="badge">Pending</span></td>
+                            <td><button class="btn small">Edit</button> <button class="btn small ghost">Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="settings" class="admin-card hidden" style="margin-top:1rem">
+            <h2 style="color:var(--accent)">Settings</h2>
+            <p style="color:var(--muted);margin-bottom:.6rem">Application preferences</p>
+
+            <form id="settingsForm" style="margin-top:.75rem;display:grid;gap:.75rem;max-width:720px">
+                <label class="form-row"><span>Site title</span><input name="siteTitle" class="input-inline" value="beznicku"/></label>
+
+                <label class="form-row"><span>Theme</span>
+                    <select id="themeSelect" name="theme" class="input-inline">
+                        <option value="default">Default</option>
+                        <option value="green">Green</option>
+                    </select>
+                </label>
+
+                <label class="form-row"><span>Allow registrations</span>
+                    <input type="checkbox" name="allowReg" checked>
+                </label>
+
+                <label class="form-row"><span>Notification email</span><input name="notifyEmail" class="input-inline" value="heyitsbeznicku@gmail.com"/></label>
+
+                <div style="display:flex;gap:.5rem;margin-top:.5rem">
+                    <button type="button" id="saveSettings" class="btn">Save</button>
+                    <button type="reset" class="btn ghost">Reset</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <div id="toast" class="toast hidden">Saved</div>
+
+<script>
+(function(){
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    const navLinks = Array.from(document.querySelectorAll('.nav-menu a'));
+    const sections = Array.from(document.querySelectorAll('main.content section'));
+    const toast = document.getElementById('toast');
+
+    const themeSelect = document.getElementById('themeSelect');
+    const savedTheme = localStorage.getItem('adminTheme') || 'default';
+    function applyTheme(name){
+        if(name === 'green') document.documentElement.setAttribute('data-theme','green');
+        else document.documentElement.removeAttribute('data-theme');
+    }
+    applyTheme(savedTheme);
+    if(themeSelect) themeSelect.value = savedTheme;
+    if(themeSelect){
+        themeSelect.addEventListener('change', () => {
+            const val = themeSelect.value;
+            applyTheme(val);
+            localStorage.setItem('adminTheme', val);
+        });
+    }
+
+
+    function showSection(id) {
+        sections.forEach(s => s.classList.toggle('hidden', s.id !== id));
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+        if (id !== location.hash.replace('#','')) history.replaceState(null, '', '#' + id);
+    }
+
+    function initFromHash() {
+        const hash = (location.hash || '#dashboard').replace('#','');
+        showSection(hash || 'dashboard');
+    }
+
+
+    navLinks.forEach(a=>{
+        a.addEventListener('click', (e)=>{
+            e.preventDefault();
+            const id = a.getAttribute('href').slice(1);
+            showSection(id);
+            if (window.innerWidth <= 900) sidebar.classList.remove('open');
+        });
+    });
+
+    const userSearch = document.getElementById('userSearch');
+    if (userSearch) {
+        userSearch.addEventListener('input', () => {
+            const q = userSearch.value.toLowerCase();
+            const rows = document.querySelectorAll('#usersTable tr');
+            rows.forEach(r => {
+                r.style.display = (r.innerText.toLowerCase().includes(q)) ? '' : 'none';
+            });
+        });
+    }
+
+    const saveBtn = document.getElementById('saveSettings');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            toast.textContent = 'Settings saved';
+            toast.classList.remove('hidden');
+            setTimeout(()=> toast.classList.add('hidden'), 1800);
+        });
+    }
+
+    function update() {
+        if (window.innerWidth <= 900) {
+            toggle.style.display = 'block';
+        } else {
+            toggle.style.display = 'none';
+            sidebar.classList.remove('open');
+        }
+    }
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    window.addEventListener('resize', update);
+    update();
+
+    initFromHash();
+    window.addEventListener('hashchange', initFromHash);
+})();
+</script>
+
+</body>
+</html>
