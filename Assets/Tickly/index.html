@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon-32x32.png" type="image/x-icon">
+    <title>Tickly</title>
+</head>
+<body>
+    
+    <script src="scripts.js"></script>
+
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6l4 2"></path>
+                </svg>
+                <span class="logo-text">Tickly</span>
+            </div>
+            
+            <nav class="nav-center">
+                <a href="#integrations" class="nav-link">Automation Flows</a>
+                 <a href="#about" class="nav-link">About us</a>
+            </nav>
+            
+            <div class="nav-right">
+                <a href="#" onclick="showElement('#popup-login')" class="nav-link">Log in</a>
+                <a href="#" onclick="showElement('#popup-login')" class="btn-primary">Free Demo</a>
+                <a id="dashboard-link" href="dashboard.html" class="btn-primary" style="display:none; margin-left:12px;">Dashboard</a>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <section class="landing-page">
+
+        <div class="text-center">
+            <h1 class="landing-title">Welcome to Tickly</h1>
+            <p class="landing-subtitle">Your ultimate task management solution</p>
+            <a href="#" onclick="showElement('#popup-login')" class="btn-sigma">Get Started</a>
+        </div>
+
+        <div class="img-div">
+            <img src="https://i.pinimg.com/736x/47/e2/6d/47e26d72a84b680c28895d14cf185cdd.jpg" alt="sigma">
+        </div>
+
+    </section>
+
+<section id="integrations" class="modules-section">
+    <h1 class="modules-title">Premium Automation Modules</h1>
+    <p class="modules-subtitle">Unlock smart automation features to level up your productivity</p>
+
+    <div class="modules-grid">
+
+        <div class="module-card free">
+            <div class="module-icon">📌</div>
+            <h3 class="module-name">Basic Reminders</h3>
+            <p class="module-desc">Get simple time-based reminders for any task.</p>
+            <span class="module-tag-free">Free</span>
+        </div>
+
+        <div class="module-card free">
+            <div class="module-icon">📤</div>
+            <h3 class="module-name">Daily Summary</h3>
+            <p class="module-desc">Receive a daily overview of upcoming deadlines.</p>
+            <span class="module-tag-free">Free</span>
+        </div>
+
+        <div class="module-card free">
+            <div class="module-icon">📁</div>
+            <h3 class="module-name">Project Organizer</h3>
+            <p class="module-desc">Automatically group tasks into smart project categories.</p>
+            <span class="module-tag-free">Free</span>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">⚡</div>
+            <h3 class="module-name">Unlimited Projects</h3>
+            <p class="module-desc">Automatically creates tasks based on your activity, imported content or integrated apps.</p>
+            <span class="module-tag">Premium</span>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">🎨</div>
+            <h3 class="module-name">Theme Customizer</h3>
+            <p class="module-desc">Customize the look and feel of your task reminders to match your style.</p>
+            <span class="module-tag">Premium</span>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">🔗</div>
+            <h3 class="module-name">Cross-App Sync</h3>
+            <p class="module-desc">Sync tasks with tools like Notion, GitHub or Trello — without any configuration.</p>
+            <span class="module-tag">Soon</span>
+        </div>
+
+
+    </div>
+
+    <div class="modules-cta">
+        <p>Want to try these premium modules?</p>
+        <a href="#" onclick="showElement('#popup-login')" class="btn-primary">Try Tickly Premium</a>
+    </div>
+</section>
+
+
+
+    <section id="about" class="about-section">
+        <h1>About Tickly</h1>
+        
+        <div class="show-container">
+
+            <div class="stat-card all-users" aria-live="polite">
+                <div class="count">4,500+</div>
+                <div class="label">Users trusted Tickly</div>
+                <div class="meta">Trusted users who adopted Tickly</div>
+            </div>
+
+            <div class="stat-card rating" aria-hidden="false">
+                <div class="count rating-value"><span class="num">4.8</span><span class="slash">/</span><span class="out-of">5</span></div>
+                <div class="label">Average rating</div>
+                <div class="stars" aria-hidden="true">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star half">★</span>
+                </div>
+            </div>
+
+            <div class="stat-card online-users" data-min="4000" data-max="7420" aria-live="polite">
+                <div class="count">4,200</div>
+                <div class="label">Users online now</div>
+                <div class="meta last-updated">Last updated: <span class="time">—</span></div>
+            </div>
+
+        </div>
+
+        <div class="about-description">
+            <p>Tickly is a cutting-edge task management application designed to streamline your workflow and boost productivity. With an intuitive interface and powerful features, Tickly helps you organize tasks, set deadlines, and collaborate with your team seamlessly.</p>
+            <p>Our platform is trusted by over 4,500 users worldwide, boasting an average rating of 4.8 out of 5 stars. Whether you're managing personal projects or coordinating with a large team, Tickly provides the tools you need to stay on top of your tasks and achieve your goals.</p>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <span>&copy; 2025 bez_nicku. All rights reserved.</span>
+            <nav class="footer-nav">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </nav>
+        </div>
+    </footer>
+
+
+
+    <!--POPUPS-->
+
+
+    <div style="display: none;" id="popup-login" class="popup">
+        <div class="log-in-popup">
+            <h1>Log In</h1>
+            <p>Log in to continue</p>
+            <div id="login-error" style="display:none;color:#ffb4b4;margin-top:8px;font-size:0.95rem;text-align:center;"></div>
+
+            <form id="login-form">
+                <input id="login-email" type="email" placeholder="Email" required>
+                <input id="login-password" type="password" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Log In</button>
+            </form>
+
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <a href="#" onclick="showElement('#popup-signin')" class="sign-up-link">Don't have an account? Sign Up</a>
+
+        </div>
+    </div>
+
+
+    <div style="display: none;" id="popup-signin" class="popup">
+        <div class="sign-up-popup">
+            <h1>Sign Up</h1>
+            <p>Create your account</p>
+
+            <form id="signup-form">
+                <input id="signup-name" type="text" placeholder="Full Name" required>
+                <input id="signup-email" type="email" placeholder="Email" required>
+                <input id="signup-password" type="password" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Sign Up</button>
+                <div id="signup-error" style="display:none;color:#ffb4b4;margin-top:8px;font-size:0.9rem;"></div>
+            </form>
+
+            <a href="#" class="terms-conditions">By signing up, you agree to our Terms & Conditions</a>
+            <a href="#" onclick="showElement('#popup-login')" class="log-in-link">Already have an account? Log In</a>
+
+        </div>
+    </div>
+
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const navCenter = document.querySelector('.nav-center');
+    const navRight = document.querySelector('.nav-right');
+    
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navCenter.classList.toggle('mobile-open');
+            navRight.classList.toggle('mobile-open');
+        });
+    }
+});
+</script>
+</html>

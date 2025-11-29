@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tickly — Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main style="padding:2rem 1rem; display:flex; justify-content:center;">
+        <div class="dashboard-container">
+            <aside class="dashboard-sidebar" id="dashboard-sidebar">
+                <div class="brand">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                    <strong>Tickly</strong>
+                </div>
+                <nav>
+                    <a href="#home" class="active" data-section="home">🏠 Home</a>
+                    <a href="#tasks" data-section="tasks">🗒️ Tasks</a>
+                    <a href="#projects" data-section="projects">📁 Projects</a>
+                    <a href="#calendar" data-section="calendar">📅 Calendar</a>
+                    <a href="#settings" data-section="settings">⚙️ Settings</a>
+                    <a href="#premium" data-section="premium">💎 Tickly Premium</a>
+                </nav>
+                <div style="margin-top:auto; padding:1rem 0.75rem; border-top:1px solid rgba(255,255,255,0.06);">
+                    <button id="logout-btn" class="nav-link" style="width:100%; text-align:left; padding:0.6rem 0.75rem; margin-bottom:0.8rem; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.12); transition:all 0.2s;">
+                        🚪 Log out
+                    </button>
+                    <div style="text-align:center; color:rgba(230,255,232,0.4); font-size:0.75rem; font-weight:500;">
+                        Tickly v0.1
+                    </div>
+                </div>
+            </aside>
+
+            <div class="dashboard-content">
+                <section class="dashboard-home" id="section-home" style="display:grid; gap:1.6rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+                        <div>
+                            <h1 id="home-title" style="margin:0 0 0.25rem 0;">Welcome</h1>
+                            <p id="home-sub" style="margin:0;color:rgba(230,255,232,0.8);">Your personal Tickly dashboard</p>
+                        </div>
+                        <div style="display:flex; gap:0.75rem; align-items:center;">
+                            <button id="sidebar-toggle" class="sidebar-toggle nav-link">☰</button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-stats" style="display:flex; gap:1rem; flex-wrap:wrap;">
+                        <div class="stat-card" style="flex:1; min-width:200px; max-width:360px;">
+                            <div class="count" id="stat-total">0</div>
+                            <div class="label">Total tasks</div>
+                            <div class="meta">All tasks stored locally</div>
+                        </div>
+                        <div class="stat-card" style="flex:1; min-width:200px; max-width:360px;">
+                            <div class="count" id="stat-completed">0</div>
+                            <div class="label">Completed</div>
+                            <div class="meta">Tasks marked complete</div>
+                        </div>
+                        <div class="stat-card" style="flex:1; min-width:200px; max-width:360px;">
+                            <div class="count" id="stat-upcoming">0</div>
+                            <div class="label">Upcoming</div>
+                            <div class="meta">Due within 7 days</div>
+                        </div>
+                    </div>
+
+                    <div id="home-suggestions" class="suggestions-card" style="background:linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.03)); border:1.5px solid rgba(var(--accent-rgb),0.12); border-radius:12px; padding:1.2rem; margin-top:0.9rem;">
+                        <h3 style="margin:0 0 0.6rem 0; color:var(--accent); font-size:1.05rem;">Suggestions</h3>
+                        <ul style="margin:0; padding-left:1.2rem; line-height:1.6; color:rgba(230,255,232,0.8);"></ul>
+                    </div>
+
+                    <div class="home-insights two-charts">
+                        <div class="left-chart">
+                            <div class="chart-card time-card">
+                                <h3>Time Spent (7 days)</h3>
+                                <canvas id="time-chart" style="width:100%;height:180px;display:block;"></canvas>
+                                <div id="time-legend" class="chart-legend"></div>
+                            </div>
+                        </div>
+
+                        <div class="right-chart">
+                            <div class="chart-card big-donut">
+                                <h3>Productivity</h3>
+                                <div class="home-chart">
+                                    <canvas id="productivity-chart" style="width:220px;height:220px;display:block;"></canvas>
+                                </div>
+                                <div id="chart-legend" class="chart-legend"></div>
+                            </div>
+
+                            <div class="urgent-card" style="margin-top:1rem;">
+                                <h3>Urgent tasks</h3>
+                                <div style="color:rgba(230,255,232,0.85); margin-bottom:0.4rem;">Tasks that we consider currently the most urgent to complete</div>
+                                <div id="urgent-list" style="display:flex; flex-direction:column; gap:0.45rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-tasks" style="display:none; padding-top:0.6rem;">
+                    <div style="background:linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.03)); border:1.5px solid rgba(var(--accent-rgb),0.12); border-radius:12px; padding:1.2rem; margin-bottom:1.2rem;">
+                        <h2 style="margin:0 0 0.5rem 0; color:var(--accent); font-size:1.4rem;">Welcome to the tasks section!</h2>
+                        <p style="margin:0; color:rgba(230,255,232,0.8); line-height:1.6;">Here you can add your tasks and set their due dates. Track your progress and stay motivated!</p>
+                    </div>
+
+                    <div style="display:flex; gap:0.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:0.8rem;">
+                        <div style="display:flex; gap:0.6rem; align-items:center;">
+                        </div>
+                        <form id="task-add-form" style="display:flex; gap:0.6rem; align-items:center;">
+                            <input id="task-title" required placeholder="New task title" style="padding:0.5rem 0.7rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px;">
+                            <input id="task-due" type="date" style="padding:0.5rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text);">
+                            <button class="btn-primary" type="submit">Add Task</button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 style="margin:0 0 0.6rem 0;">Quick view</h3>
+                        <div id="task-list" style="display:grid; gap:0.6rem;"></div>
+                    </div>
+                </section>
+
+                <section id="section-projects" style="display:none; padding-top:0.6rem;">
+                    <div class="calendar-header" style="display:flex; justify-content:space-between; align-items:center; gap:0.6rem; margin-bottom:0.8rem;">
+                        <h2 style="margin:0; color:var(--accent);">Projects</h2>
+                        <button id="new-project-btn" class="btn-primary">+ New project</button>
+                    </div>
+                    <div class="projects-controls" style="display:flex; gap:0.8rem; margin-bottom:0.8rem; flex-wrap:wrap;">
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <label style="color:rgba(230,255,232,0.8); font-size:0.9rem;">Sort by:</label>
+                            <select id="project-sort" style="background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.16); color:var(--text); padding:0.4rem 0.6rem; border-radius:8px;">
+                                <option value="az">A → Z</option>
+                                <option value="za">Z → A</option>
+                                <option value="tasks">Most tasks</option>
+                                <option value="completed">Most completed</option>
+                                <option value="recent">Recently created</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.4rem; margin-top: 0.1rem;">
+                            <label style="color:rgba(230,255,232,0.8); font-size:0.9rem;">Filter by:</label>
+                            <select id="project-filter" style="background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.16); color:var(--text); padding:0.4rem 0.6rem; border-radius:8px;">
+                                <option value="all">All</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="high">High activity</option>
+                                <option value="low">Low activity</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="projects-grid" class="projects-grid"></div>
+                    <div id="project-detail" style="display:none;"></div>
+                </section>
+
+                <section id="section-calendar" style="display:none; padding-top:0.6rem;">
+                    <div class="calendar-wrapper">
+                        <div class="calendar-nav" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <button id="cal-prev" class="btn-secondary" style="padding:0.5rem 1rem;">‹ Prev</button>
+                            <h2 id="cal-month-year" style="margin:0; color:var(--accent); font-size:1.8rem; font-weight:700;">January 2025</h2>
+                            <button id="cal-next" class="btn-secondary" style="padding:0.5rem 1rem;">Next ›</button>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
+                            <div class="calendar-container">
+                                <div class="calendar-days-header" style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.4rem; margin-bottom:0.6rem;">
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Sun</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Mon</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Tue</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Wed</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Thu</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Fri</div>
+                                    <div style="text-align:center; color:rgba(230,255,232,0.7); font-weight:600; font-size:0.85rem;">Sat</div>
+                                </div>
+                                <div id="calendar-grid" class="calendar-grid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.4rem;">
+                                </div>
+
+                                <div class="calendar-legend" style="display:flex; gap:1.5rem; margin-top:1.5rem; padding:1rem; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid rgba(var(--accent-rgb),0.1);">
+                                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                                        <div style="width:12px; height:12px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(var(--accent-rgb),0.5);"></div>
+                                        <span style="font-size:0.9rem; color:rgba(230,255,232,0.8);">Today</span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                                        <div style="width:10px; height:10px; border-radius:50%; background:#4ade80;"></div>
+                                        <span style="font-size:0.9rem; color:rgba(230,255,232,0.8);">Completed</span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                                        <div style="width:10px; height:10px; border-radius:50%; background:#fbbf24;"></div>
+                                        <span style="font-size:0.9rem; color:rgba(230,255,232,0.8);">Upcoming</span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                                        <div style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></div>
+                                        <span style="font-size:0.9rem; color:rgba(230,255,232,0.8);">Overdue</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="calendar-day-tasks">
+                                <div style="background:linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.03)); border:1.5px solid rgba(var(--accent-rgb),0.15); border-radius:12px; padding:1.2rem;">
+                                    <h3 id="selected-day-title" style="margin:0 0 1rem 0; color:var(--accent); font-size:1.2rem;">Select a day</h3>
+                                    
+                                    <form id="quick-task-form" style="display:none; margin-bottom:1.2rem; padding:1rem; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.1);">
+                                        <input type="text" id="quick-task-title" placeholder="Task title" required style="width:100%; margin-bottom:0.6rem; padding:0.5rem; background:rgba(255,255,255,0.02); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:6px; color:var(--text);">
+                                        <select id="quick-task-priority" style="width:100%; margin-bottom:0.6rem; padding:0.5rem; background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:6px; color:var(--text);">
+                                            <option value="low">Low priority</option>
+                                            <option value="medium">Medium priority</option>
+                                            <option value="high">High priority</option>
+                                        </select>
+                                        <button type="submit" class="btn-primary" style="width:100%; padding:0.5rem;">Add task</button>
+                                    </form>
+
+                                    <div id="day-tasks-list" style="display:flex; flex-direction:column; gap:0.6rem;">
+                                        <div style="color:rgba(230,255,232,0.6); text-align:center; padding:2rem 1rem;">
+                                            Click a day to view tasks
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+                <section id="section-settings" style="display:none; padding-top:0.6rem;">
+                    <h2 style="margin:0 0 1.2rem 0; color:var(--accent);">Settings</h2>
+                    
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(var(--accent-rgb),0.12); border-radius:12px; padding:1.2rem; margin-bottom:1rem;">
+                        <h3 style="margin:0 0 0.8rem 0; color:var(--accent); font-size:1.1rem;">Premium status</h3>
+                        <div id="premium-status-display"></div>
+                    </div>
+                    
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(var(--accent-rgb),0.12); border-radius:12px; padding:1.2rem; margin-bottom:1rem;">
+                        <h3 style="margin:0 0 0.8rem 0; color:var(--accent); font-size:1.1rem;">Theme</h3>
+                        <p style="color:rgba(230,255,232,0.7); margin:0 0 0.8rem 0; font-size:0.9rem;">⭐ Premium feature</p>
+                        <select id="theme-selector" style="width:100%; padding:0.6rem; background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.16); color:var(--text); border-radius:8px;" disabled>
+                            <option value="dark">Dark (Default)</option>
+                            <option value="midnight">Midnight Blue</option>
+                            <option value="forest">Forest Green</option>
+                            <option value="sunset">Sunset Orange</option>
+                        </select>
+                        <p style="color:rgba(230,255,232,0.6); margin:0.5rem 0 0 0; font-size:0.85rem;">Unlock custom themes with Premium</p>
+                    </div>
+                    
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(var(--accent-rgb),0.12); border-radius:12px; padding:1.2rem;">
+                        <h3 style="margin:0 0 0.8rem 0; color:var(--accent); font-size:1.1rem;">Account</h3>
+                        <div id="account-info-display" style="color:rgba(230,255,232,0.8);"></div>
+                    </div>
+                </section>
+
+
+
+                <section id="section-premium" style="display:none; padding-top:0.6rem;">
+                    <div class="premium-wrapper">
+                        <h1 class="premium-main-title">Tickly premium</h1>
+
+                        <div class="premium-cards">
+                            <div class="premium-plan-card">
+                                <h3>Monthly</h3>
+                                <div class="premium-plan-price">$5<span>/month</span></div>
+                                <ul class="premium-plan-features">
+                                    <li>More features like unlimited projects</li>
+                                    <li>Custom themes</li>
+                                    <li>Smart reminders</li>
+                                    <li>Cancel anytime</li>
+                                </ul>
+                                <button class="btn-primary premium-plan-btn" onclick="showPremiumPaymentModal('monthly', false)">Get monthly</button>
+                                <button class="btn-secondary" onclick="showPremiumPaymentModal('monthly', true)" style="margin-top:0.5rem; width:100%; text-align:center;">7-day free trial</button>
+                            </div>
+
+                            <div class="premium-plan-card premium-plan-card--featured">
+                                <div class="premium-best-badge">Best value</div>
+                                <h3>Yearly</h3>
+                                <div class="premium-plan-price">$40<span>/year</span></div>
+                                <ul class="premium-plan-features">
+                                    <li>Everything in Monthly</li>
+                                    <li>Save 33%</li>
+                                    <li>Priority support</li>
+                                    <li>Annual renewal</li>
+                                </ul>
+                                <button class="btn-primary premium-plan-btn" onclick="showPremiumPaymentModal('yearly', false)">Get yearly</button>
+                                <button class="btn-secondary" onclick="showPremiumPaymentModal('yearly', true)" style="margin-top:0.5rem; width:100%; text-align:center;">7-day free trial</button>
+                            </div>
+                        </div>
+
+                        <div class="premium-faq-section">
+                            <h2 class="premium-faq-heading">FAQ</h2>
+                            <div class="premium-faq-list">
+                                <div class="premium-faq-item">
+                                    <div class="premium-faq-question">Can I cancel anytime?</div>
+                                    <div class="premium-faq-answer">Yes, you can cancel your subscription at any time. Monthly cancels immediately, yearly at renewal.</div>
+                                </div>
+                                <div class="premium-faq-item">
+                                    <div class="premium-faq-question">Is my data safe?</div>
+                                    <div class="premium-faq-answer">Your data is stored locally on your device. Premium features don't require cloud sync.</div>
+                                </div>
+                                <div class="premium-faq-item">
+                                    <div class="premium-faq-question">Do you offer a trial?</div>
+                                    <div class="premium-faq-answer">Yes, both plans come with a 7-day free trial. No credit card required.</div>
+                                </div>
+                                <div class="premium-faq-item">
+                                    <div class="premium-faq-question">What payment methods do you accept?</div>
+                                    <div class="premium-faq-answer">We accept all major credit cards, PayPal, and Apple Pay.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts.js"></script>
+    <script>
+        function checkUserPremium() {
+            const sessRaw = sessionStorage.getItem('tickly_session');
+            if (!sessRaw) return false;
+            try {
+                const sess = JSON.parse(sessRaw);
+                const email = sess.email;
+                if (!email) return false;
+                if (email.endsWith('_D_BBf') || email.endsWith('_PREM')) {
+                    if (email.endsWith('_D_BBf')) {
+                        const user = JSON.parse(localStorage.getItem('tickly_user') || '{}');
+                        if (user && user.email === email && user.premiumActivated) {
+                            const now = Date.now();
+                            const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                            if (now - user.premiumActivated > sevenDays) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            } catch { return false; }
+        }
+        
+        function getPremiumDaysLeft() {
+            const sessRaw = sessionStorage.getItem('tickly_session');
+            if (!sessRaw) return 0;
+            try {
+                const sess = JSON.parse(sessRaw);
+                const email = sess.email;
+                if (!email || !email.endsWith('_D_BBf')) return -1;
+                const user = JSON.parse(localStorage.getItem('tickly_user') || '{}');
+                if (user && user.email === email && user.premiumActivated) {
+                    const now = Date.now();
+                    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                    const timeLeft = sevenDays - (now - user.premiumActivated);
+                    return Math.max(0, Math.ceil(timeLeft / (24 * 60 * 60 * 1000)));
+                }
+                return 0;
+            } catch { return 0; }
+        }
+        
+        function activatePremiumTrial() {
+            const sessRaw = sessionStorage.getItem('tickly_session');
+            console.log('Trial activation - sessRaw:', sessRaw);
+            if (!sessRaw) {
+                console.log('No session found');
+                return false;
+            }
+            try {
+                const sess = JSON.parse(sessRaw);
+                const oldEmail = sess.email;
+                console.log('Trial activation - oldEmail:', oldEmail);
+                if (!oldEmail) {
+                    console.log('No email in session');
+                    return false;
+                }
+                if (oldEmail.endsWith('_D_BBf') || oldEmail.endsWith('_PREM')) {
+                    console.log('User already has premium');
+                    alert('You already have premium!');
+                    return false;
+                }
+                const newEmail = oldEmail + '_D_BBf';
+                console.log('Trial activation - newEmail:', newEmail);
+                const user = JSON.parse(localStorage.getItem('tickly_user') || '{}');
+                console.log('Trial activation - user:', user);
+                if (!user || !user.email) {
+                    console.log('User not found in localStorage');
+                    return false;
+                }
+                if (user.email !== oldEmail) {
+                    console.log('User email mismatch:', user.email, 'vs', oldEmail);
+                    return false;
+                }
+                // Update user
+                user.email = newEmail;
+                user.premiumActivated = Date.now();
+                console.log('Trial activation - updated user:', user);
+                localStorage.setItem('tickly_user', JSON.stringify(user));
+                sess.email = newEmail;
+                sessionStorage.setItem('tickly_session', JSON.stringify(sess));
+                console.log('Trial activation - SUCCESS, new session:', JSON.stringify(sess));
+                return true;
+            } catch (e) { 
+                console.error('Trial activation error:', e);
+                return false; 
+            }
+        }
+        
+        function activateFullPremium() {
+            const sessRaw = sessionStorage.getItem('tickly_session');
+            console.log('Full premium activation - sessRaw:', sessRaw);
+            if (!sessRaw) return false;
+            try {
+                const sess = JSON.parse(sessRaw);
+                const oldEmail = sess.email;
+                console.log('Full premium - oldEmail:', oldEmail);
+                if (!oldEmail) return false;
+                const baseEmail = oldEmail.replace('_D_BBf', '').replace('_PREM', '');
+                const newEmail = baseEmail + '_PREM';
+                console.log('Full premium - baseEmail:', baseEmail, 'newEmail:', newEmail);
+                const user = JSON.parse(localStorage.getItem('tickly_user') || '{}');
+                if (!user || !user.email) {
+                    console.log('User not found');
+                    return false;
+                }
+                user.email = newEmail;
+                user.premiumActivated = Date.now();
+                console.log('Full premium - updated user:', user);
+                localStorage.setItem('tickly_user', JSON.stringify(user));
+                sess.email = newEmail;
+                sessionStorage.setItem('tickly_session', JSON.stringify(sess));
+                console.log('Full premium - SUCCESS');
+                return true;
+            } catch (e) { 
+                console.error('Full premium error:', e);
+                return false; 
+            }
+        }
+        
+        function showPremiumPaymentModal(plan, isTrial) {
+            const overlay = document.createElement('div');
+            overlay.className = 'popup';
+            const modal = document.createElement('div');
+            modal.className = 'log-in-popup';
+            modal.style.maxWidth = '500px';
+            modal.style.height = 'auto';
+            
+            const planName = plan === 'monthly' ? 'Monthly' : 'Yearly';
+            const price = plan === 'monthly' ? '$5/month' : '$40/year';
+            
+            if (isTrial) {
+                modal.innerHTML = `
+                    <h1>Start 7-day free trial</h1>
+                    <p style="color:rgba(230,255,232,0.9); line-height:1.6; margin-bottom:1rem;">Get full access to Tickly Premium for 7 days, completely free. No credit card required!</p>
+                    <div style="background:rgba(var(--accent-rgb),0.08); border:1px solid rgba(var(--accent-rgb),0.2); border-radius:10px; padding:1rem; margin-bottom:1rem;">
+                        <strong style="color:var(--accent);">Premium features include:</strong>
+                        <ul style="margin:0.5rem 0 0 1.2rem; color:rgba(230,255,232,0.85); line-height:1.8;">
+                            <li>Unlimited projects</li>
+                            <li>Custom themes</li>
+                            <li>Smart reminders</li>
+                            <li>Advanced analytics</li>
+                            <li>Priority support</li>
+                        </ul>
+                    </div>
+                    <div style="display:flex; gap:0.6rem; justify-content:flex-end;">
+                        <button type="button" class="btn-secondary" id="trial-cancel">Cancel</button>
+                        <button type="button" class="btn-primary" id="trial-activate">Activate trial</button>
+                    </div>`;
+            } else {
+                modal.innerHTML = `
+                    <h1>Purchase ${planName} plan</h1>
+                    <p style="color:rgba(230,255,232,0.9); margin-bottom:1rem;">Complete your purchase for <strong style="color:var(--accent);">${price}</strong></p>
+                    <form id="payment-form" style="overflow:hidden;">
+                        <label style="color:rgba(230,255,232,0.9); font-size:0.9rem; display:block; margin-bottom:0.3rem;">Card number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" required style="width:100%; margin-bottom:0.8rem; box-sizing:border-box;">
+                        
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:0.8rem;">
+                            <div style="min-width:0;">
+                                <label style="color:rgba(230,255,232,0.9); font-size:0.9rem; display:block; margin-bottom:0.3rem;">Expiry</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" required style="width:100%; box-sizing:border-box;">
+                            </div>
+                            <div style="min-width:0;">
+                                <label style="color:rgba(230,255,232,0.9); font-size:0.9rem; display:block; margin-bottom:0.3rem;">CVV</label>
+                                <input type="text" placeholder="123" maxlength="3" required style="width:100%; box-sizing:border-box;">
+                            </div>
+                        </div>
+                        
+                        <label style="color:rgba(230,255,232,0.9); font-size:0.9rem; display:block; margin-bottom:0.3rem;">Billing address</label>
+                        <input type="text" placeholder="Street address" required style="width:100%; margin-bottom:0.8rem; box-sizing:border-box;">
+                        
+                        <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1rem;">
+                            <button type="button" class="btn-secondary" id="payment-cancel">Cancel</button>
+                            <button type="submit" class="btn-primary">Complete purchase</button>
+                        </div>
+                    </form>`;
+            }
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            function close() { document.body.removeChild(overlay); }
+            
+            if (isTrial) {
+                modal.querySelector('#trial-cancel').addEventListener('click', close);
+                modal.querySelector('#trial-activate').addEventListener('click', () => {
+                    if (activatePremiumTrial()) {
+                        close();
+                        showCongratulationsPopup();
+                        if (window.updatePremiumStatus) window.updatePremiumStatus();
+                    } else {
+                        alert('Error activating trial. Please try again.');
+                    }
+                });
+            } else {
+                modal.querySelector('#payment-cancel').addEventListener('click', close);
+                modal.querySelector('#payment-form').addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    if (activateFullPremium()) {
+                        close();
+                        alert('🎉 Payment successful! Premium activated.');
+                        if (window.updatePremiumStatus) window.updatePremiumStatus();
+                    } else {
+                        alert('Payment processed! Premium activated.');
+                        close();
+                    }
+                });
+            }
+        }
+        
+        function showCongratulationsPopup() {
+            const overlay = document.createElement('div');
+            overlay.className = 'popup';
+            const modal = document.createElement('div');
+            modal.className = 'log-in-popup';
+            modal.style.maxWidth = '500px';
+            modal.style.maxHeight = '85vh';
+            modal.style.overflowY = 'auto';
+            modal.style.textAlign = 'center';
+            modal.style.animation = 'fadeIn 0.3s ease-out';
+            
+            modal.innerHTML = `
+                <div style="font-size:4rem; margin-bottom:1rem; animation: bounce 0.6s ease-out;">\ud83c\udf89</div>
+                <h1 style="color:var(--accent); margin-bottom:0.8rem;">Congratulations!</h1>
+                <p style="color:rgba(230,255,232,0.9); line-height:1.6; margin-bottom:1rem; font-size:1.1rem;">Your 7-day Premium trial has been activated!</p>
+                <div style="background:rgba(var(--accent-rgb),0.08); border:1px solid rgba(var(--accent-rgb),0.2); border-radius:10px; padding:1.2rem; margin-bottom:1.5rem; text-align:left;">
+                    <strong style="color:var(--accent); display:block; margin-bottom:0.8rem;">\u2728 You now have access to:</strong>
+                    <ul style="margin:0 0 0 1.5rem; color:rgba(230,255,232,0.85); line-height:1.9;">
+                        <li><strong>Unlimited projects</strong> \u2014 create as many as you need</li>
+                        <li><strong>Custom themes</strong> \u2014 personalize your experience</li>
+                        <li><strong>Smart reminders</strong> \u2014 never miss a deadline</li>
+                        <li><strong>Advanced analytics</strong> \u2014 track your productivity</li>
+                        <li><strong>Priority support</strong> \u2014 get help when you need it</li>
+                    </ul>
+                </div>
+                <p style="color:rgba(230,255,232,0.7); font-size:0.9rem; margin-bottom:1.5rem;">Trial ends in <strong style="color:var(--accent);">7 days</strong>. Enjoy your premium experience! \ud83d\ude80</p>
+                <button class=\"btn-primary\" id=\"congrats-close\" style=\"width:100%; padding:0.8rem;\">Start exploring Premium</button>
+            `;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            modal.querySelector('#congrats-close').addEventListener('click', () => {
+                document.body.removeChild(overlay);
+            });
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes bounce {
+                    0%, 100% { transform: translateY(0); }
+                    25% { transform: translateY(-20px); }
+                    50% { transform: translateY(-10px); }
+                    75% { transform: translateY(-15px); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function updatePremiumStatus() {
+            console.log('updatePremiumStatus called');
+            const display = document.getElementById('premium-status-display');
+            const hasPremium = checkUserPremium();
+            const daysLeft = getPremiumDaysLeft();
+            console.log('Has premium:', hasPremium, 'Days left:', daysLeft);
+            
+            if (display) {
+                if (hasPremium) {
+                    if (daysLeft >= 0) {
+                        display.innerHTML = `
+                            <div style="color:var(--accent); font-weight:600; margin-bottom:0.4rem;">✓ Premium trial active</div>
+                            <div style="color:rgba(230,255,232,0.8);">Days remaining: <strong>${daysLeft}</strong></div>
+                            <div style="color:rgba(230,255,232,0.7); font-size:0.85rem; margin-top:0.4rem;">Upgrade to full Premium to keep all features after trial ends.</div>`;
+                    } else {
+                        display.innerHTML = `
+                            <div style="color:var(--accent); font-weight:600; margin-bottom:0.4rem;">✓ Premium active</div>
+                            <div style="color:rgba(230,255,232,0.8);">Status: <strong>Active</strong></div>
+                            <div style="color:rgba(230,255,232,0.7); font-size:0.85rem; margin-top:0.4rem;">Thank you for supporting Tickly!</div>`;
+                    }
+                } else {
+                    display.innerHTML = `
+                        <div style="color:rgba(230,255,232,0.7); margin-bottom:0.4rem;">No active premium subscription</div>
+                        <a href="#premium" onclick="activate('premium')" style="color:var(--accent); text-decoration:underline;">Upgrade to Premium</a>`;
+                }
+            }
+            
+            const accountDisplay = document.getElementById('account-info-display');
+            if (accountDisplay) {
+                const sessRaw = sessionStorage.getItem('tickly_session');
+                console.log('Session raw:', sessRaw);
+                if (sessRaw) {
+                    try {
+                        const sess = JSON.parse(sessRaw);
+                        const email = sess.email || 'Unknown';
+                        console.log('Parsed email:', email);
+                        accountDisplay.innerHTML = `
+                            <div style="margin-bottom:0.5rem;"><strong>Email:</strong> ${email}</div>
+                            <div style="font-size:0.85rem; color:rgba(230,255,232,0.6);">Your Tickly account identifier</div>`;
+                    } catch (e) {
+                        console.error('Error parsing session:', e);
+                        accountDisplay.innerHTML = '<div>Error loading account info</div>';
+                    }
+                } else {
+                    accountDisplay.innerHTML = '<div>Not logged in</div>';
+                }
+            }
+            
+            const themeSelector = document.getElementById('theme-selector');
+            if (themeSelector) {
+                themeSelector.disabled = !hasPremium;
+            }
+        }
+        
+        window.updatePremiumStatus = updatePremiumStatus;
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('tickly_theme') || 'dark';
+            if (savedTheme !== 'dark') {
+                document.body.setAttribute('data-theme', savedTheme);
+            }
+            
+            const themeSelector = document.getElementById('theme-selector');
+            if (themeSelector) {
+                themeSelector.value = savedTheme;
+                themeSelector.addEventListener('change', (e) => {
+                    const theme = e.target.value;
+                    if (theme === 'dark') {
+                        document.body.removeAttribute('data-theme');
+                    } else {
+                        document.body.setAttribute('data-theme', theme);
+                    }
+                    localStorage.setItem('tickly_theme', theme);
+                });
+            }
+            
+            const sessRaw = sessionStorage.getItem('tickly_session');
+            const userRaw = localStorage.getItem('tickly_user');
+            let name = '';
+            if (userRaw) {
+                try { name = JSON.parse(userRaw).name || JSON.parse(userRaw).email || ''; } catch (e) { name = ''; }
+            }
+
+            const title = document.getElementById('home-title');
+            if (name) title.textContent = 'Welcome, ' + name + '!';
+            else title.textContent = 'Welcome!';
+
+            function getTaskStorageKey() {
+                const sessRaw = sessionStorage.getItem('tickly_session');
+                if (sessRaw) {
+                    try {
+                        const sess = JSON.parse(sessRaw);
+                        if (sess.email) {
+                            // Remove premium suffixes to keep same storage key
+                            const baseEmail = sess.email.replace('_D_BBf', '').replace('_PREM', '');
+                            return 'tickly_tasks_' + baseEmail;
+                        }
+                    } catch {}
+                }
+                return 'tickly_tasks'; // fallback to global
+            }
+            
+            function readTasks() {
+                try {
+                    const key = getTaskStorageKey();
+                    const raw = localStorage.getItem(key);
+                    return raw ? JSON.parse(raw) : [];
+                } catch (e) { return []; }
+            }
+
+            function saveTasks(arr) {
+                const seen = new Set();
+                arr.forEach(t => {
+                    if (!t.id || seen.has(t.id)) {
+                        t.id = 't' + Date.now() + Math.random().toString(16).slice(2,10);
+                    }
+                    seen.add(t.id);
+                });
+                const key = getTaskStorageKey();
+                localStorage.setItem(key, JSON.stringify(arr));
+            }
+
+            function computeStats(tasks) {
+                const total = tasks.length;
+                const completed = tasks.filter(t => t.completed).length;
+                const now = Date.now();
+                const upcoming = tasks.filter(t => t.due && (new Date(t.due)).getTime() - now <= 7*24*60*60*1000 && !(t.completed)).length;
+                return { total, completed, upcoming };
+            }
+
+            function render() {
+                const tasks = readTasks();
+                const s = computeStats(tasks);
+                document.getElementById('stat-total').textContent = s.total;
+                document.getElementById('stat-completed').textContent = s.completed;
+                document.getElementById('stat-upcoming').textContent = s.upcoming;
+
+                const homeSection = document.getElementById('section-home');
+                const isHomeVisible = homeSection && homeSection.style.display !== 'none';
+
+                if (isHomeVisible) {
+                    try { drawChart(s.completed, s.total); } catch (e) { }
+                }
+                try { updateSuggestions(s, tasks); } catch (e) { }
+
+                if (isHomeVisible) {
+                    try { drawTimeChart(); } catch (e) { /* ignore */ }
+                }
+                try { renderUrgent(tasks); } catch (e) { /* ignore */ }
+
+                const list = document.getElementById('task-list');
+                list.innerHTML = '';
+                if (tasks.length === 0) {
+                    list.innerHTML = '<div style="color:rgba(230,255,232,0.7)">No tasks yet,</div>';
+                } else {
+                    tasks.slice(0, 20).forEach(t => {
+                        const el = document.createElement('div');
+                        el.style.padding = '0.6rem 0.8rem';
+                        el.style.background = 'rgba(255,255,255,0.02)';
+                        el.style.borderRadius = '8px';
+                        el.style.display = 'flex';
+                        el.style.alignItems = 'center';
+                        el.style.justifyContent = 'space-between';
+
+                        const left = document.createElement('div');
+                        left.style.display = 'flex';
+                        left.style.alignItems = 'center';
+                        left.style.gap = '0.8rem';
+
+                        const chk = document.createElement('input');
+                        chk.type = 'checkbox';
+                        chk.checked = !!t.completed;
+                        chk.addEventListener('change', () => {
+                            t.completed = chk.checked;
+                            const all = readTasks();
+                            const idx = all.findIndex(x => x.id === t.id);
+                            if (idx !== -1) { all[idx].completed = t.completed; saveTasks(all); }
+                            render();
+                        });
+
+                        const info = document.createElement('div');
+                        info.innerHTML = '<strong>' + (t.title || 'Task') + '</strong><div style="font-size:0.85rem;color:rgba(230,255,232,0.7);">' + (t.due ? ('Due: ' + t.due) : 'No due date') + '</div>';
+
+                        left.appendChild(chk);
+                        left.appendChild(info);
+
+                        const actions = document.createElement('div');
+                        actions.style.display = 'flex';
+                        actions.style.gap = '0.6rem';
+                        actions.style.alignItems = 'center';
+
+                        const del = document.createElement('button');
+                        del.className = 'nav-link';
+                        del.style.padding = '0.25rem 0.6rem';
+                        del.textContent = 'Delete';
+                        del.addEventListener('click', () => {
+                            const all = readTasks();
+                            const filtered = all.filter(x => x.id !== t.id);
+                            saveTasks(filtered);
+                            render();
+                        });
+
+                        const mark = document.createElement('span');
+                        mark.style.color = t.completed ? 'var(--accent)' : 'rgba(230,255,232,0.5)';
+                        mark.textContent = t.completed ? '✔' : '•';
+
+                        actions.appendChild(del);
+                        actions.appendChild(mark);
+
+                        el.appendChild(left);
+                        el.appendChild(actions);
+
+                        list.appendChild(el);
+                    });
+                }
+
+                try { renderProjects(); } catch(e) {}
+            }
+
+
+            const taskForm = document.getElementById('task-add-form');
+            if (taskForm) {
+                taskForm.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    const title = document.getElementById('task-title').value.trim();
+                    const due = document.getElementById('task-due').value || null;
+                    if (!title) return;
+                    const tasks = readTasks();
+                    const item = { id: 't' + Date.now() + Math.random().toString(16).slice(2,10), title, due, completed: false };
+                    tasks.unshift(item);
+                    saveTasks(tasks);
+                    taskForm.reset();
+                    render();
+                });
+            }
+
+            const btn = document.getElementById('logout-btn');
+            if (btn) {
+                btn.addEventListener('click', (ev) => {
+                    ev.preventDefault();
+                    if (window.logoutUser) window.logoutUser();
+                    window.location.href = 'index.html';
+                });
+            }
+
+            function drawChart(completed, total) {
+                const canvas = document.getElementById('productivity-chart');
+                const legend = document.getElementById('chart-legend');
+                if (!canvas) return;
+                const rect = canvas.getBoundingClientRect();
+                const ratio = window.devicePixelRatio || 1;
+                const w = Math.max(120, Math.round(rect.width));
+                const h = Math.max(120, Math.round(rect.height));
+                canvas.width = Math.round(w * ratio);
+                canvas.height = Math.round(h * ratio);
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                const ctx = canvas.getContext('2d');
+                ctx.setTransform(ratio,0,0,ratio,0,0);
+                ctx.clearRect(0,0,w,h);
+
+                const accent = (getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#00e676').trim();
+                const remaining = Math.max(0, total - completed);
+                const cx = w/2; const cy = h/2; const r = Math.min(w,h)/2 - 8;
+                const totalSafe = total === 0 ? 1 : total;
+                const angleCompleted = (completed / totalSafe) * Math.PI * 2;
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255,255,255,0.03)';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + angleCompleted, false);
+                ctx.closePath();
+                ctx.fillStyle = accent;
+                ctx.fill();
+                ctx.strokeStyle = accent;
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.4;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, -Math.PI/2 + angleCompleted, -Math.PI/2 + Math.PI*2, false);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(255,255,255,0.04)';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 0.56, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(7,9,12,0)';
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(230,255,232,0.95)';
+                ctx.font = '600 16px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const percent = total === 0 ? 0 : Math.round((completed/total)*100);
+                ctx.fillText(percent + '%', cx, cy - 8);
+                ctx.font = '400 12px "Outfit", sans-serif';
+                ctx.fillText('productive', cx, cy + 12);
+
+                if (legend) legend.textContent = `${completed} completed • ${remaining} remaining`;
+            }
+
+            function updateSuggestions(stats, tasks) {
+                const el = document.getElementById('home-suggestions');
+                if (!el) return;
+                const listEl = el.querySelector('ul');
+                if (!listEl) return;
+                const now = Date.now();
+                const overdue = tasks.filter(t => t.due && (new Date(t.due)).getTime() < now && !t.completed).length;
+                const hasPremium = checkUserPremium();
+                const parts = [];
+                if (overdue > 0) parts.push(`${overdue} overdue task${overdue>1?'s':''} — consider finishing them first.`);
+                if (stats.upcoming > 3) parts.push('You have several tasks due soon — prioritize top 3.');
+                if (stats.completed / Math.max(1, stats.total) < 0.25) parts.push('Low completion rate — try shorter focus sessions.');
+                if (!hasPremium) {
+                    parts.push('Looking for smart reminders and advanced insights? <a href="#premium" data-section-link="premium" style="color:var(--accent); text-decoration:underline;">See Premium</a>.');
+                }
+                if (parts.length === 0) parts.push('Great job — keep the momentum going! Consider a 25-minute focus session.');
+                listEl.innerHTML = parts.map(p => `<li>${p}</li>`).join('');
+            }
+
+            function readSiteTime() {
+                try {
+                    const raw = localStorage.getItem('tickly_site_time');
+                    if (raw) return JSON.parse(raw);
+                } catch(e){}
+                const sample = [];
+                for (let i=6;i>=0;i--) sample.push(Math.round((Math.random()*2 + 0.5) * 60)); // minutes
+                localStorage.setItem('tickly_site_time', JSON.stringify(sample));
+                return sample;
+            }
+
+            function drawTimeChart() {
+                const canvas = document.getElementById('time-chart');
+                if (!canvas) return;
+                const data = readSiteTime(); // minutes per day, last 7 days
+                const rect = canvas.getBoundingClientRect();
+                const ratio = window.devicePixelRatio || 1;
+                const w = Math.max(200, Math.round(rect.width));
+                const h = Math.max(120, Math.round(rect.height));
+                canvas.width = Math.round(w * ratio);
+                canvas.height = Math.round(h * ratio);
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                const ctx = canvas.getContext('2d');
+                ctx.setTransform(ratio,0,0,ratio,0,0);
+                ctx.clearRect(0,0,w,h);
+
+                const padding = 12;
+                const barAreaW = w - padding*2;
+                const barW = Math.max(8, Math.floor(barAreaW / data.length) - 6);
+                const maxVal = Math.max(...data, 30);
+                data.forEach((val, idx) => {
+                    const x = padding + idx * (barW + 6);
+                    const barH = Math.round((val / maxVal) * (h - padding*2));
+                    const y = h - padding - barH;
+                    
+                    const ratio = val / maxVal;
+                    const accentRgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim();
+                    const opacity = 0.3 + (ratio * 0.7);
+                    const barColor = `rgba(${accentRgb}, ${opacity})`;
+                    
+                    ctx.fillStyle = barColor;
+                    ctx.fillRect(x, y, barW, barH);
+                    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+                    ctx.font = '10px "Outfit", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(new Date(Date.now() - (6-idx)*24*60*60*1000).toLocaleDateString(undefined,{weekday:'short'}), x + barW/2, h - 2);
+                });
+                const totalMin = data.reduce((a,b)=>a+b,0);
+                const legend = document.getElementById('time-legend');
+                if (legend) legend.textContent = `${Math.round(totalMin/60)}h ${totalMin%60}m spent on site last 7 days`;
+            }
+
+            function renderUrgent(tasks) {
+                const container = document.getElementById('urgent-list');
+                if (!container) return;
+                container.innerHTML = '';
+                const now = Date.now();
+                const twoDays = 2 * 24 * 60 * 60 * 1000;
+                const urgent = tasks.filter(t => t.due && !t.completed).map(t => {
+                    const dueTime = new Date(t.due).getTime();
+                    const timeLeft = dueTime - now;
+                    return { ...t, timeLeft };
+                }).filter(t => t.timeLeft >= 0 && t.timeLeft <= twoDays)
+                .sort((a,b) => a.timeLeft - b.timeLeft)
+                .slice(0,5);
+
+                if (urgent.length === 0) {
+                    container.innerHTML = '<div style="color:var(--text); padding:0.6rem; text-align:center;">✓ All tasks are fine!</div>';
+                    return;
+                }
+                urgent.forEach((u, idx) => {
+                    const el = document.createElement('div');
+                    el.className = 'urgent-item';
+                    const daysLeft = Math.ceil(u.timeLeft / (24*60*60*1000));
+                    const accentRgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim();
+                    const dotColor = daysLeft === 0 ? `rgba(${accentRgb}, 1)` : (daysLeft === 1 ? `rgba(${accentRgb}, 0.7)` : `rgba(${accentRgb}, 0.5)`);
+                    
+                    const title = document.createElement('div');
+                    title.innerHTML = '<div style="display:flex; align-items:center; gap:0.6rem;"><div style="width:8px; height:8px; border-radius:50%; background:' + dotColor + '; animation:pulse-dot 1.5s ease-in-out infinite;"></div><div><strong>' + (u.title || 'Task') + '</strong><div style="font-size:0.8rem;color:var(--text); opacity:0.7; margin-top:0.1rem;">Due: ' + u.due + '</div></div></div>';
+                    const meta = document.createElement('div');
+                    meta.innerHTML = '<div style="text-align:right;font-size:1rem;color:var(--accent);font-weight:700;">' + daysLeft + 'd</div>';
+                    el.appendChild(title);
+                    el.appendChild(meta);
+                    container.appendChild(el);
+                });
+            }
+
+            window.drawChart = drawChart;
+            window.drawTimeChart = drawTimeChart;
+            window.readTasks = readTasks;
+            window.saveTasks = saveTasks;
+            window.render = render;
+
+            render();
+
+            function getProjectStorageKey() {
+                const sessRaw = sessionStorage.getItem('tickly_session');
+                if (sessRaw) {
+                    try {
+                        const sess = JSON.parse(sessRaw);
+                        if (sess.email) {
+                            // Remove premium suffixes to keep same storage key
+                            const baseEmail = sess.email.replace('_D_BBf', '').replace('_PREM', '');
+                            return 'tickly_projects_' + baseEmail;
+                        }
+                    } catch {}
+                }
+                return 'tickly_projects'; // fallback
+            }
+            
+            function readProjects() {
+                try {
+                    const key = getProjectStorageKey();
+                    const raw = localStorage.getItem(key);
+                    return raw ? JSON.parse(raw) : [];
+                } catch(e) { return []; }
+            }
+            function saveProjects(arr) {
+                const key = getProjectStorageKey();
+                localStorage.setItem(key, JSON.stringify(arr));
+            }
+            function tasksForProject(allTasks, projectId) {
+                return allTasks.filter(t => t.projectId === projectId);
+            }
+            function projectProgress(allTasks, projectId) {
+                const t = tasksForProject(allTasks, projectId);
+                const total = t.length;
+                const done = t.filter(x => x.completed).length;
+                return { total, done, pct: total === 0 ? 0 : Math.round((done/total)*100) };
+            }
+            
+            const sortSelect = document.getElementById('project-sort');
+            const filterSelect = document.getElementById('project-filter');
+            if (sortSelect) sortSelect.addEventListener('change', renderProjects);
+            if (filterSelect) filterSelect.addEventListener('change', renderProjects);
+            function renderProjects() {
+                const grid = document.getElementById('projects-grid');
+                if (!grid) return;
+                let projects = readProjects();
+                const allTasks = readTasks();
+                
+                const filterVal = document.getElementById('project-filter')?.value || 'all';
+                if (filterVal === 'active') {
+                    projects = projects.filter(p => {
+                        const stats = projectProgress(allTasks, p.id);
+                        return stats.total > 0 && stats.done < stats.total;
+                    });
+                } else if (filterVal === 'completed') {
+                    projects = projects.filter(p => {
+                        const stats = projectProgress(allTasks, p.id);
+                        return stats.total > 0 && stats.done === stats.total;
+                    });
+                } else if (filterVal === 'high') {
+                    projects = projects.filter(p => {
+                        const now = Date.now();
+                        const dayAgo = now - 24*60*60*1000;
+                        return (p.lastUpdate || 0) >= dayAgo;
+                    });
+                } else if (filterVal === 'low') {
+                    projects = projects.filter(p => {
+                        const now = Date.now();
+                        const dayAgo = now - 24*60*60*1000;
+                        return (p.lastUpdate || 0) < dayAgo;
+                    });
+                }
+
+                // Apply sort
+                const sortVal = document.getElementById('project-sort')?.value || 'az';
+                if (sortVal === 'az') {
+                    projects.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+                } else if (sortVal === 'za') {
+                    projects.sort((a,b) => (b.name||'').localeCompare(a.name||''));
+                } else if (sortVal === 'tasks') {
+                    projects.sort((a,b) => {
+                        const aT = projectProgress(allTasks, a.id).total;
+                        const bT = projectProgress(allTasks, b.id).total;
+                        return bT - aT;
+                    });
+                } else if (sortVal === 'completed') {
+                    projects.sort((a,b) => {
+                        const aD = projectProgress(allTasks, a.id).done;
+                        const bD = projectProgress(allTasks, b.id).done;
+                        return bD - aD;
+                    });
+                } else if (sortVal === 'recent') {
+                    projects.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+                }
+
+                if (projects.length === 0) {
+                    grid.innerHTML = '<div style="color:rgba(230,255,232,0.75); padding:0.8rem;">No projects match the filter.</div>';
+                    return;
+                }
+                grid.innerHTML = '';
+                projects.forEach(p => {
+                    const stats = projectProgress(allTasks, p.id);
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+                    const labelColors = {work:'#5b9cff',personal:'#b47bff',study:'#ff9c4a',team:accentColor,important:'#ff4444'};
+                    const labelColor = labelColors[p.label] || '#999';
+                    const lastUpdate = p.lastUpdate ? timeAgo(p.lastUpdate) : 'never';
+                    card.innerHTML = `
+                        <div class="project-top">
+                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                <div class="project-icon">${p.icon || '📁'}</div>
+                                <div class="project-name">${p.name || 'Project'}</div>
+                                <span class="project-label" style="background:${labelColor}; color:#fff; font-size:0.75rem; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700;">${p.label||'work'}</span>
+                            </div>
+                            <button class="project-menu-btn" data-project-id="${p.id}">⋮</button>
+                        </div>
+                        <div class="project-meta">${stats.total} tasks • Last update: ${lastUpdate}</div>
+                        <div class="project-progress">
+                            <div class="bar"><span style="width:${stats.pct}%"></span></div>
+                            <div class="pct">${stats.pct}%</div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn-primary open-project">Open project</button>
+                            <button class="btn-secondary delete-project">Delete</button>
+                        </div>`;
+                    const openBtn = card.querySelector('.open-project');
+                    openBtn.addEventListener('click', () => openProject(p.id));
+                    const delBtn = card.querySelector('.delete-project');
+                    delBtn.addEventListener('click', () => deleteProject(p.id, p.name));
+                    const menuBtn = card.querySelector('.project-menu-btn');
+                    menuBtn.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        showProjectMenu(p.id, p.name, ev.target);
+                    });
+                    grid.appendChild(card);
+                });
+            }
+            
+            function timeAgo(timestamp) {
+                const now = Date.now();
+                const diff = now - timestamp;
+                const mins = Math.floor(diff / 60000);
+                if (mins < 60) return mins <= 1 ? '1 min ago' : `${mins} mins ago`;
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) return hrs === 1 ? '1 hour ago' : `${hrs} hours ago`;
+                const days = Math.floor(hrs / 24);
+                return days === 1 ? '1 day ago' : `${days} days ago`;
+            }
+
+            function openProject(projectId) {
+                const projects = readProjects();
+                const project = projects.find(p => p.id === projectId);
+                if (!project) return;
+                
+                const grid = document.getElementById('projects-grid');
+                const detail = document.getElementById('project-detail');
+                const controls = document.querySelector('.projects-controls');
+                const header = document.querySelector('.calendar-header');
+                
+                grid.style.display = 'none';
+                controls.style.display = 'none';
+                header.querySelector('h2').textContent = `${project.icon} ${project.name}`;
+                header.querySelector('#new-project-btn').textContent = '← Back to projects';
+                header.querySelector('#new-project-btn').onclick = () => closeProjectDetail();
+                
+                detail.style.display = 'block';
+                renderProjectDetail(projectId);
+            }
+            
+            function closeProjectDetail() {
+                const grid = document.getElementById('projects-grid');
+                const detail = document.getElementById('project-detail');
+                const controls = document.querySelector('.projects-controls');
+                const header = document.querySelector('.calendar-header');
+                
+                grid.style.display = '';
+                controls.style.display = '';
+                detail.style.display = 'none';
+                header.querySelector('h2').textContent = 'Projects';
+                header.querySelector('#new-project-btn').textContent = '+ New project';
+                header.querySelector('#new-project-btn').onclick = null;
+                renderProjects();
+            }
+            
+            function renderProjectDetail(projectId) {
+                const detail = document.getElementById('project-detail');
+                const allTasks = readTasks();
+                const projectTasks = tasksForProject(allTasks, projectId);
+                const hasPremium = checkUserPremium();
+                const taskCountInfo = hasPremium 
+                    ? `${projectTasks.length} tasks (✓ Premium: Unlimited)` 
+                    : `${projectTasks.length}/15 tasks used`;
+                const now = Date.now();
+                const dueSoon = projectTasks.filter(t => t.due && !t.completed && (new Date(t.due).getTime() - now) <= 3*24*60*60*1000).length;
+                const completed = projectTasks.filter(t => t.completed).length;
+                const overdue = projectTasks.filter(t => t.due && !t.completed && new Date(t.due).getTime() < now).length;
+                
+                detail.innerHTML = `
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:0.8rem; margin-bottom:1rem;">
+                        <div class="stat-card" style="padding:0.8rem;">
+                            <div class="count" style="font-size:1.4rem;">${dueSoon}</div>
+                            <div class="label" style="font-size:0.85rem;">Due soon</div>
+                        </div>
+                        <div class="stat-card" style="padding:0.8rem;">
+                            <div class="count" style="font-size:1.4rem;">${completed}</div>
+                            <div class="label" style="font-size:0.85rem;">Completed</div>
+                        </div>
+                        <div class="stat-card" style="padding:0.8rem;">
+                            <div class="count" style="font-size:1.4rem; color:#ff4444;">${overdue}</div>
+                            <div class="label" style="font-size:0.85rem;">Overdue</div>
+                        </div>
+                    </div>
+                    
+                    <form id="project-task-form" style="display:flex; gap:0.6rem; margin-bottom:1rem;">
+                        <input id="pt-title" required placeholder="Add task to this project" style="flex:1; padding:0.5rem 0.7rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text);">
+                        <input id="pt-due" type="date" style="padding:0.5rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text);">
+                        <button class="btn-primary" type="submit">Add</button>
+                    </form>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+                        <h3 style="margin:0;">Tasks in this project</h3>
+                        <div style="color:rgba(var(--accent-rgb),0.8); font-size:0.9rem;">${taskCountInfo}</div>
+                    </div>
+                    <div id="project-task-list" style="display:grid; gap:0.6rem;"></div>
+                `;
+                
+                const form = detail.querySelector('#project-task-form');
+                form.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    const title = detail.querySelector('#pt-title').value.trim();
+                    const due = detail.querySelector('#pt-due').value || null;
+                    if (!title) return;
+                    
+                    // Check task limit
+                    const hasPremium = checkUserPremium();
+                    const allTasks = readTasks();
+                    const currentProjectTasks = tasksForProject(allTasks, projectId);
+                    if (!hasPremium && currentProjectTasks.length >= 15) {
+                        alert('❌ Free tier limit: 15 tasks per project.\n\nUpgrade to Premium for unlimited tasks in each project!');
+                        return;
+                    }
+                    
+                    const tasks = readTasks();
+                    const item = { id: 't' + Date.now() + Math.random().toString(16).slice(2,10), title, due, completed: false, projectId };
+                    tasks.unshift(item);
+                    saveTasks(tasks);
+                    // Update project lastUpdate
+                    const projects = readProjects();
+                    const p = projects.find(x => x.id === projectId);
+                    if (p) {
+                        p.lastUpdate = Date.now();
+                        saveProjects(projects);
+                    }
+                    form.reset();
+                    renderProjectDetail(projectId);
+                });
+                
+                renderProjectTasks(projectId);
+            }
+            
+            function renderProjectTasks(projectId) {
+                const list = document.getElementById('project-task-list');
+                if (!list) return;
+                const allTasks = readTasks();
+                const tasks = tasksForProject(allTasks, projectId);
+                if (tasks.length === 0) {
+                    list.innerHTML = '<div style="color:rgba(230,255,232,0.7);">No tasks in this project yet.</div>';
+                    return;
+                }
+                list.innerHTML = '';
+                tasks.forEach(t => {
+                    const el = document.createElement('div');
+                    el.style.padding = '0.6rem 0.8rem';
+                    el.style.background = 'rgba(255,255,255,0.02)';
+                    el.style.borderRadius = '8px';
+                    el.style.display = 'flex';
+                    el.style.alignItems = 'center';
+                    el.style.justifyContent = 'space-between';
+
+                    const left = document.createElement('div');
+                    left.style.display = 'flex';
+                    left.style.alignItems = 'center';
+                    left.style.gap = '0.8rem';
+
+                    const chk = document.createElement('input');
+                    chk.type = 'checkbox';
+                    chk.checked = !!t.completed;
+                    chk.addEventListener('change', () => {
+                        t.completed = chk.checked;
+                        const all = readTasks();
+                        const idx = all.findIndex(x => x.id === t.id);
+                        if (idx !== -1) { all[idx].completed = t.completed; saveTasks(all); }
+                        // Update project lastUpdate
+                        const projects = readProjects();
+                        const p = projects.find(x => x.id === projectId);
+                        if (p) {
+                            p.lastUpdate = Date.now();
+                            saveProjects(projects);
+                        }
+                        renderProjectDetail(projectId);
+                    });
+
+                    const info = document.createElement('div');
+                    info.innerHTML = '<strong>' + (t.title || 'Task') + '</strong><div style="font-size:0.85rem;color:rgba(230,255,232,0.7);">' + (t.due ? ('Due: ' + t.due) : 'No due date') + '</div>';
+
+                    left.appendChild(chk);
+                    left.appendChild(info);
+
+                    const actions = document.createElement('div');
+                    actions.style.display = 'flex';
+                    actions.style.gap = '0.6rem';
+                    actions.style.alignItems = 'center';
+
+                    const del = document.createElement('button');
+                    del.className = 'nav-link';
+                    del.style.padding = '0.25rem 0.6rem';
+                    del.textContent = 'Delete';
+                    del.addEventListener('click', () => {
+                        const all = readTasks();
+                        const filtered = all.filter(x => x.id !== t.id);
+                        saveTasks(filtered);
+                        renderProjectDetail(projectId);
+                    });
+
+                    const mark = document.createElement('span');
+                    mark.style.color = t.completed ? 'var(--accent)' : 'rgba(230,255,232,0.5)';
+                    mark.textContent = t.completed ? '✔' : '•';
+
+                    actions.appendChild(del);
+                    actions.appendChild(mark);
+
+                    el.appendChild(left);
+                    el.appendChild(actions);
+
+                    list.appendChild(el);
+                });
+            }
+
+            function deleteProject(projectId, projectName) {
+                if (!confirm(`Delete project "${projectName}"? All tasks will remain but lose project assignment.`)) return;
+                const list = readProjects();
+                const filtered = list.filter(p => p.id !== projectId);
+                saveProjects(filtered);
+                renderProjects();
+            }
+            
+            function showProjectMenu(projectId, projectName, btnElement) {
+                // Remove existing menu if any
+                const existing = document.querySelector('.project-context-menu');
+                if (existing) existing.remove();
+                
+                const menu = document.createElement('div');
+                menu.className = 'project-context-menu';
+                menu.style.cssText = 'position:absolute; background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.2); border-radius:8px; padding:0.4rem; z-index:1000; box-shadow:0 8px 24px rgba(0,0,0,0.5);';
+                menu.innerHTML = `
+                    <button class="menu-item" data-action="rename">Rename</button>
+                    <button class="menu-item" data-action="icon">Change icon</button>
+                    <button class="menu-item" data-action="archive">Archive</button>
+                    <button class="menu-item" data-action="delete" style="color:#ff4444;">Delete</button>
+                `;
+                
+                const rect = btnElement.getBoundingClientRect();
+                menu.style.left = rect.left + 'px';
+                menu.style.top = (rect.bottom + 4) + 'px';
+                document.body.appendChild(menu);
+                
+                menu.querySelectorAll('.menu-item').forEach(item => {
+                    item.style.cssText = 'display:block; width:100%; text-align:left; background:transparent; border:none; color:var(--text); padding:0.5rem 0.8rem; cursor:pointer; border-radius:6px;';
+                    item.addEventListener('mouseenter', () => item.style.background = 'rgba(var(--accent-rgb),0.08)');
+                    item.addEventListener('mouseleave', () => item.style.background = 'transparent');
+                    item.addEventListener('click', () => {
+                        const action = item.dataset.action;
+                        menu.remove();
+                        handleProjectMenuAction(projectId, action);
+                    });
+                });
+                
+                const closeMenu = (e) => {
+                    if (!menu.contains(e.target) && e.target !== btnElement) {
+                        menu.remove();
+                        document.removeEventListener('click', closeMenu);
+                    }
+                };
+                setTimeout(() => document.addEventListener('click', closeMenu), 100);
+            }
+            
+            function handleProjectMenuAction(projectId, action) {
+                const projects = readProjects();
+                const project = projects.find(p => p.id === projectId);
+                if (!project) return;
+                
+                if (action === 'rename') {
+                    showRenameProjectModal(project, projects);
+                } else if (action === 'icon') {
+                    showChangeIconModal(project, projects);
+                } else if (action === 'archive') {
+                    showArchiveModal(project, projects);
+                } else if (action === 'delete') {
+                    deleteProject(projectId, project.name);
+                }
+            }
+            
+            function showRenameProjectModal(project, projects) {
+                const overlay = document.createElement('div');
+                overlay.className = 'popup';
+                const modal = document.createElement('div');
+                modal.className = 'log-in-popup';
+                modal.style.height = 'auto';
+                modal.innerHTML = `
+                    <h1>Rename project</h1>
+                    <p style="color:rgba(230,255,232,0.8);">Current name: <strong>${project.name}</strong></p>
+                    <form>
+                        <input type="text" id="rename-input" placeholder="New project name" value="${project.name}" required>
+                        <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:0.6rem;">
+                            <button type="button" class="btn-secondary" id="rename-cancel">Cancel</button>
+                            <button type="submit" class="btn-primary">Save</button>
+                        </div>
+                    </form>`;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                
+                const input = modal.querySelector('#rename-input');
+                input.focus();
+                input.select();
+                
+                const form = modal.querySelector('form');
+                const cancel = modal.querySelector('#rename-cancel');
+                
+                function close() { document.body.removeChild(overlay); }
+                cancel.addEventListener('click', close);
+                
+                form.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    const newName = input.value.trim();
+                    if (newName) {
+                        project.name = newName;
+                        saveProjects(projects);
+                        close();
+                        renderProjects();
+                    }
+                });
+            }
+            
+            function showChangeIconModal(project, projects) {
+                const overlay = document.createElement('div');
+                overlay.className = 'popup';
+                const modal = document.createElement('div');
+                modal.className = 'log-in-popup';
+                modal.style.height = 'auto';
+                
+                const commonIcons = ['📁', '📂', '📊', '💼', '🎯', '⭐', '🔥', '💡', '📝', '🎨' ];
+                const iconGrid = commonIcons.map(i => `<button type="button" class="icon-pick" data-icon="${i}" style="font-size:1.5rem; background:rgba(255,255,255,0.03); border:1px solid rgba(var(--accent-rgb),0.12); padding:0.6rem; border-radius:8px; cursor:pointer;">${i}</button>`).join('');
+                
+                modal.innerHTML = `
+                    <h1>Change project icon</h1>
+                    <p style="color:rgba(230,255,232,0.8);">Current: <span style="font-size:1.4rem;">${project.icon || '📁'}</span></p>
+                    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:0.5rem; margin:1rem 0;">
+                        ${iconGrid}
+                    </div>
+                    <form>
+                        <label style="color:rgba(230,255,232,0.9); font-size:0.9rem;">Or enter custom emoji:</label>
+                        <input type="text" id="icon-input" placeholder="Emoji" maxlength="2">
+                        <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:0.6rem;">
+                            <button type="button" class="btn-secondary" id="icon-cancel">Cancel</button>
+                            <button type="submit" class="btn-primary">Save</button>
+                        </div>
+                    </form>`;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                
+                const input = modal.querySelector('#icon-input');
+                const form = modal.querySelector('form');
+                const cancel = modal.querySelector('#icon-cancel');
+                
+                function close() { document.body.removeChild(overlay); }
+                cancel.addEventListener('click', close);
+                
+                // Quick pick from grid
+                modal.querySelectorAll('.icon-pick').forEach(btn => {
+                    btn.addEventListener('mouseenter', () => btn.style.background = 'rgba(var(--accent-rgb),0.12)');
+                    btn.addEventListener('mouseleave', () => btn.style.background = 'rgba(255,255,255,0.03)');
+                    btn.addEventListener('click', () => {
+                        project.icon = btn.dataset.icon;
+                        saveProjects(projects);
+                        close();
+                        renderProjects();
+                    });
+                });
+                
+                form.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    const newIcon = input.value.trim();
+                    if (newIcon) {
+                        project.icon = newIcon;
+                        saveProjects(projects);
+                        close();
+                        renderProjects();
+                    }
+                });
+            }
+            
+            function showArchiveModal(project, projects) {
+                const overlay = document.createElement('div');
+                overlay.className = 'popup';
+                const modal = document.createElement('div');
+                modal.className = 'log-in-popup';
+                modal.style.height = 'auto';
+                const isArchived = project.archived;
+                modal.innerHTML = `
+                    <h1>${isArchived ? 'Unarchive' : 'Archive'} project</h1>
+                    <p style="color:rgba(230,255,232,0.9); line-height:1.6;">${isArchived ? 'Restore this project to active projects list?' : 'Archive this project? It will be hidden from the main list but all tasks remain accessible.'}</p>
+                    <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1rem;">
+                        <button type="button" class="btn-secondary" id="archive-cancel">Cancel</button>
+                        <button type="button" class="btn-primary" id="archive-confirm">${isArchived ? 'Unarchive' : 'Archive'}</button>
+                    </div>`;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                
+                const cancel = modal.querySelector('#archive-cancel');
+                const confirm = modal.querySelector('#archive-confirm');
+                
+                function close() { document.body.removeChild(overlay); }
+                cancel.addEventListener('click', close);
+                
+                confirm.addEventListener('click', () => {
+                    project.archived = !project.archived;
+                    saveProjects(projects);
+                    close();
+                    renderProjects();
+                });
+            }
+
+            // New project popup (simple modal) with 3-project limit
+            const newBtn = document.getElementById('new-project-btn');
+            if (newBtn) {
+                newBtn.addEventListener('click', showNewProjectModal);
+            }
+            function showNewProjectModal() {
+                const projects = readProjects();
+                const hasPremium = checkUserPremium();
+                if (!hasPremium && projects.length >= 3) {
+                    showPremiumUpsell();
+                    return;
+                }
+                const overlay = document.createElement('div');
+                overlay.className = 'popup';
+                const modal = document.createElement('div');
+                modal.className = 'log-in-popup';
+                modal.style.height = 'auto';
+                
+                // Show different message based on premium status
+                const statusMessage = hasPremium 
+                    ? `<p style="font-size:0.9rem; color:var(--accent);">✓ Premium: Unlimited projects</p>`
+                    : `<p style="font-size:0.9rem; color:rgba(230,255,232,0.75);">Free tier: ${projects.length}/3 projects used.</p>`;
+                
+                modal.innerHTML = `
+                    <h1>Create new project</h1>
+                    ${statusMessage}
+                    <form>
+                        <input type="text" id="np-name" placeholder="Project name" required>
+                        <input type="text" id="np-icon" placeholder="Icon (e.g. 📁)" maxlength="2">
+                        <label style="color:rgba(230,255,232,0.9); font-size:0.9rem; margin-top:0.4rem;">Label:</label>
+                        <select id="np-label" style="background:var(--bg); border:1px solid rgba(var(--accent-rgb),0.16); color:var(--text); padding:0.5rem; border-radius:8px;">
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="study">Study</option>
+                            <option value="team">Team</option>
+                            <option value="important">Important</option>
+                        </select>
+                        <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:0.6rem;">
+                            <button type="button" id="np-cancel" class="btn-secondary">Cancel</button>
+                            <button type="submit" class="btn-primary">Create</button>
+                        </div>
+                    </form>`;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                const form = modal.querySelector('form');
+                const cancel = modal.querySelector('#np-cancel');
+                function close(){ document.body.removeChild(overlay); }
+                cancel.addEventListener('click', close);
+                form.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    const name = modal.querySelector('#np-name').value.trim();
+                    const icon = modal.querySelector('#np-icon').value.trim() || '📁';
+                    const label = modal.querySelector('#np-label').value;
+                    if (!name) return;
+                    const list = readProjects();
+                    const id = 'p' + Date.now().toString(36);
+                    list.push({ id, name, icon, label, createdAt: Date.now(), lastUpdate: Date.now() });
+                    saveProjects(list);
+                    close();
+                    renderProjects();
+                });
+            }
+            function showPremiumUpsell() {
+                const overlay = document.createElement('div');
+                overlay.className = 'popup';
+                const modal = document.createElement('div');
+                modal.className = 'log-in-popup';
+                modal.style.height = 'auto';
+                modal.innerHTML = `
+                    <h1>💎 Upgrade to Premium</h1>
+                    <p style="color:rgba(230,255,232,0.9); line-height:1.6;">You've reached the 3-project limit on the free tier. Upgrade to <strong style="color:var(--accent);">Tickly Premium</strong> for unlimited projects, smart reminders, and advanced insights.</p>
+                    <div style="display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1rem;">
+                        <button type="button" id="upsell-cancel" class="btn-secondary">Cancel</button>
+                        <button type="button" id="upsell-upgrade" class="btn-primary">See Premium</button>
+                    </div>`;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                const cancel = modal.querySelector('#upsell-cancel');
+                const upgrade = modal.querySelector('#upsell-upgrade');
+                function close(){ document.body.removeChild(overlay); }
+                cancel.addEventListener('click', close);
+                upgrade.addEventListener('click', () => {
+                    close();
+                    const premiumLink = document.querySelector('#dashboard-sidebar a[data-section="premium"]');
+                    if (premiumLink) premiumLink.click();
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('dashboard-sidebar');
+            const links = sidebar ? Array.from(sidebar.querySelectorAll('a[data-section]')) : [];
+
+            const sections = {
+                home: document.getElementById('section-home'),
+                tasks: document.getElementById('section-tasks'),
+                projects: document.getElementById('section-projects'),
+                calendar: document.getElementById('section-calendar'),
+                settings: document.getElementById('section-settings'),
+                premium: document.getElementById('section-premium')
+            };
+
+            function activate(name) {
+                links.forEach(a => a.classList.toggle('active', a.dataset.section === name));
+                Object.keys(sections).forEach(k => {
+                    if (!sections[k]) return;
+                    sections[k].style.display = (k === name) ? '' : 'none';
+                });
+                if (name === 'settings') updatePremiumStatus();
+                if (name === 'home') {
+                    setTimeout(() => {
+                        if (window.drawChart && window.drawTimeChart) {
+                            try { 
+                                const tasks = JSON.parse(localStorage.getItem('tickly_tasks') || '[]');
+                                const completed = tasks.filter(t => t.completed).length;
+                                const total = tasks.length;
+                                window.drawChart(completed, total);
+                                window.drawTimeChart();
+                            } catch(e) {}
+                        }
+                    }, 50);
+                }
+                if (name === 'calendar') {
+                    setTimeout(() => {
+                        try {
+                            if (window.renderCalendar) {
+                                window.renderCalendar();
+                            }
+                        } catch(e) {
+                            console.error('Calendar render error:', e);
+                        }
+                    }, 50);
+                }
+                const toast = document.getElementById('premium-toast');
+                if (toast) {
+                    if (name === 'tasks') {
+                        if (sessionStorage.getItem('tickly_premium_closed') === '1') {
+                            toast.style.display = 'none';
+                            toast.style.transform = 'translateX(calc(100% + 3rem))';
+                        } else {
+                            toast.style.display = 'flex';
+                            setTimeout(() => {
+                                requestAnimationFrame(() => { 
+                                    toast.style.transform = 'translateX(0)'; 
+                                });
+                            }, 10);
+                        }
+                    } else {
+                        toast.style.transform = 'translateX(calc(100% + 3rem))';
+                        toast.ontransitionend = function(){
+                            toast.ontransitionend = null;
+                            toast.style.display = 'none';
+                        };
+                    }
+                }
+            }
+
+            links.forEach(a => a.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                const s = a.dataset.section;
+                activate(s);
+                // on small screens close sidebar
+                if (window.innerWidth <= 880 && sidebar) sidebar.classList.remove('open');
+            }));
+
+            // Delegate internal premium link clicks from suggestions
+            document.body.addEventListener('click', (ev) => {
+                const t = ev.target;
+                if (t && t.matches && t.matches('a[data-section-link="premium"]')) {
+                    ev.preventDefault();
+                    activate('premium');
+                }
+            });
+
+            // initial
+            activate('home');
+
+            const toggle = document.getElementById('sidebar-toggle');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+            }
+
+            // =============== CALENDAR FUNCTIONALITY ===============
+            let currentCalendarMonth = new Date().getMonth();
+            let currentCalendarYear = new Date().getFullYear();
+            let selectedDate = null;
+
+            function renderCalendar() {
+                const grid = document.getElementById('calendar-grid');
+                const monthYearEl = document.getElementById('cal-month-year');
+                if (!grid || !monthYearEl) return;
+
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                monthYearEl.textContent = `${months[currentCalendarMonth]} ${currentCalendarYear}`;
+
+                grid.innerHTML = '';
+
+                const firstDay = new Date(currentCalendarYear, currentCalendarMonth, 1);
+                const lastDay = new Date(currentCalendarYear, currentCalendarMonth + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startDayOfWeek = firstDay.getDay();
+
+                const today = new Date();
+                const isCurrentMonth = today.getMonth() === currentCalendarMonth && today.getFullYear() === currentCalendarYear;
+                const todayDate = today.getDate();
+
+                const tasks = window.readTasks ? window.readTasks() : [];
+
+                for (let i = 0; i < startDayOfWeek; i++) {
+                    const empty = document.createElement('div');
+                    empty.className = 'calendar-day empty';
+                    grid.appendChild(empty);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'calendar-day';
+                    
+                    if (isCurrentMonth && day === todayDate) {
+                        dayEl.classList.add('today');
+                    }
+
+                    if (selectedDate && selectedDate.day === day && selectedDate.month === currentCalendarMonth && selectedDate.year === currentCalendarYear) {
+                        dayEl.classList.add('selected');
+                    }
+
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'calendar-day-number';
+                    dayNumber.textContent = day;
+                    dayEl.appendChild(dayNumber);
+
+                    const dateStr = `${currentCalendarYear}-${String(currentCalendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayTasks = tasks.filter(t => t.due === dateStr);
+                    
+                    const completed = dayTasks.filter(t => t.completed).length;
+                    const overdue = dayTasks.filter(t => !t.completed && new Date(t.due).getTime() < today.getTime()).length;
+                    const upcoming = dayTasks.filter(t => !t.completed && new Date(t.due).getTime() >= today.getTime()).length;
+
+                    if (dayTasks.length > 0) {
+                        const dotsContainer = document.createElement('div');
+                        dotsContainer.className = 'calendar-day-dots';
+                        
+                        if (overdue > 0) {
+                            const dot = document.createElement('div');
+                            dot.className = 'calendar-day-dot overdue';
+                            dotsContainer.appendChild(dot);
+                        }
+                        if (upcoming > 0) {
+                            const dot = document.createElement('div');
+                            dot.className = 'calendar-day-dot upcoming';
+                            dotsContainer.appendChild(dot);
+                        }
+                        if (completed > 0) {
+                            const dot = document.createElement('div');
+                            dot.className = 'calendar-day-dot completed';
+                            dotsContainer.appendChild(dot);
+                        }
+                        
+                        dayEl.appendChild(dotsContainer);
+
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'calendar-day-tooltip';
+                        tooltip.innerHTML = `
+                            <div><strong>${dayTasks.length} task${dayTasks.length > 1 ? 's' : ''}</strong></div>
+                            ${overdue > 0 ? `<div style="color:#ef4444;">${overdue} overdue</div>` : ''}
+                            ${upcoming > 0 ? `<div style="color:#fbbf24;">${upcoming} upcoming</div>` : ''}
+                            ${completed > 0 ? `<div style="color:#4ade80;">${completed} completed</div>` : ''}
+                        `;
+                        dayEl.appendChild(tooltip);
+                    }
+
+                    dayEl.addEventListener('click', () => selectDay(day, currentCalendarMonth, currentCalendarYear));
+                    grid.appendChild(dayEl);
+                }
+            }
+
+            function selectDay(day, month, year) {
+                selectedDate = { day, month, year };
+                renderCalendar();
+                renderDayTasks(day, month, year);
+            }
+
+            function renderDayTasks(day, month, year) {
+                const title = document.getElementById('selected-day-title');
+                const list = document.getElementById('day-tasks-list');
+                const form = document.getElementById('quick-task-form');
+                
+                if (!title || !list || !form) return;
+
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                title.textContent = `Tasks for ${months[month]} ${day}`;
+                
+                form.style.display = 'block';
+
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const tasks = window.readTasks ? window.readTasks() : [];
+                const dayTasks = tasks.filter(t => t.due === dateStr);
+
+                list.innerHTML = '';
+
+                if (dayTasks.length === 0) {
+                    list.innerHTML = '<div style="color:rgba(230,255,232,0.6); text-align:center; padding:1.5rem;">No tasks for this day</div>';
+                    return;
+                }
+
+                const today = new Date();
+                dayTasks.forEach(task => {
+                    const taskEl = document.createElement('div');
+                    taskEl.className = 'day-task-item' + (task.completed ? ' completed' : '');
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = task.completed;
+                    checkbox.addEventListener('change', () => {
+                        task.completed = checkbox.checked;
+                        const allTasks = window.readTasks ? window.readTasks() : [];
+                        const idx = allTasks.findIndex(t => t.id === task.id);
+                        if (idx !== -1) {
+                            allTasks[idx].completed = task.completed;
+                            if (window.saveTasks) window.saveTasks(allTasks);
+                        }
+                        renderDayTasks(day, month, year);
+                        renderCalendar();
+                        if (window.render) window.render();
+                    });
+
+                    const taskTitle = document.createElement('div');
+                    taskTitle.className = 'task-title';
+                    taskTitle.textContent = task.title || 'Untitled task';
+
+                    const statusBadge = document.createElement('div');
+                    statusBadge.className = 'task-status-badge';
+                    
+                    if (task.completed) {
+                        statusBadge.classList.add('completed');
+                        statusBadge.textContent = 'Done';
+                    } else if (new Date(task.due).getTime() < today.getTime()) {
+                        statusBadge.classList.add('overdue');
+                        statusBadge.textContent = 'Overdue';
+                    } else {
+                        statusBadge.classList.add('upcoming');
+                        statusBadge.textContent = 'Pending';
+                    }
+
+                    taskEl.appendChild(checkbox);
+                    taskEl.appendChild(taskTitle);
+                    taskEl.appendChild(statusBadge);
+                    list.appendChild(taskEl);
+                });
+            }
+
+            const prevBtn = document.getElementById('cal-prev');
+            const nextBtn = document.getElementById('cal-next');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    currentCalendarMonth--;
+                    if (currentCalendarMonth < 0) {
+                        currentCalendarMonth = 11;
+                        currentCalendarYear--;
+                    }
+                    renderCalendar();
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentCalendarMonth++;
+                    if (currentCalendarMonth > 11) {
+                        currentCalendarMonth = 0;
+                        currentCalendarYear++;
+                    }
+                    renderCalendar();
+                });
+            }
+
+            const quickTaskForm = document.getElementById('quick-task-form');
+            if (quickTaskForm) {
+                quickTaskForm.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+                    
+                    if (!selectedDate) return;
+                    
+                    const title = document.getElementById('quick-task-title').value.trim();
+                    const priority = document.getElementById('quick-task-priority').value;
+                    
+                    if (!title) return;
+
+                    const dateStr = `${selectedDate.year}-${String(selectedDate.month + 1).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+                    
+                    const tasks = window.readTasks ? window.readTasks() : [];
+                    const newTask = {
+                        id: 't' + Date.now() + Math.random().toString(16).slice(2, 10),
+                        title: title,
+                        due: dateStr,
+                        completed: false,
+                        priority: priority
+                    };
+                    
+                    tasks.unshift(newTask);
+                    if (window.saveTasks) window.saveTasks(tasks);
+                    
+                    quickTaskForm.reset();
+                    renderDayTasks(selectedDate.day, selectedDate.month, selectedDate.year);
+                    renderCalendar();
+                    if (window.render) window.render();
+                });
+            }
+
+            renderCalendar();
+
+            window.renderCalendar = renderCalendar;
+            window.selectDay = selectDay;
+            window.renderDayTasks = renderDayTasks;
+        });
+    </script>
+
+                <div id="premium-toast" style="display:none; position:fixed; top:2rem; right:2rem; z-index:9999; min-width:320px; max-width:min(92vw, 420px); background:var(--gray); color:var(--text); border-radius:14px; box-shadow:0 8px 28px rgba(0,0,0,0.45); border:1px solid rgba(var(--accent-rgb),0.18); padding:1rem 1.2rem; font-size:1rem; align-items:flex-start; gap:0.8rem; transform:translateX(calc(100% + 3rem)); transition: transform 0.45s cubic-bezier(.7,.2,.3,1); will-change: transform;">
+                    <span style="font-size:1.2rem;">💎</span>
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:var(--accent); margin-bottom:0.2rem;">Tickly Premium</div>
+                        <div style="opacity:0.9;">Never miss a deadline — enable smart reminders and advanced insights.</div>
+                        <div style="margin-top:0.6rem; display:flex; gap:0.6rem; align-items:center;">
+                            <a href="#" style="background:var(--accent); color:var(--bg); font-weight:700; border-radius:8px; padding:0.45rem 0.9rem; text-decoration:none; font-size:0.95rem;">Upgrade</a>
+                            <span style="font-size:0.88rem; color:var(--accent); background:rgba(var(--accent-rgb),0.08); border:1px solid rgba(var(--accent-rgb),0.18); border-radius:6px; padding:0.2rem 0.5rem;">Save 20% today</span>
+                        </div>
+                    </div>
+                    <button id="premium-toast-close" aria-label="Close" style="background:none; border:none; color:var(--accent); font-size:1.4rem; font-weight:700; cursor:pointer; line-height:1;">&times;</button>
+                </div>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var toast = document.getElementById('premium-toast');
+                    var close = document.getElementById('premium-toast-close');
+                    function hideToast(){
+                        if (!toast) return;
+                        sessionStorage.setItem('tickly_premium_closed', '1');
+                        toast.style.transform = 'translateX(calc(100% + 3rem))';
+                        toast.ontransitionend = function(){
+                            toast.ontransitionend = null;
+                            toast.style.display = 'none';
+                        };
+                    }
+                    if (close) close.onclick = hideToast;
+                    if (toast) { toast.style.display = 'none'; toast.style.transform = 'translateX(calc(100% + 3rem))'; }
+
+                    var upgradeBtn = toast ? toast.querySelector('a[href="#"]') : null;
+                    if (upgradeBtn) {
+                        upgradeBtn.addEventListener('click', function(e){
+                            e.preventDefault();
+                            hideToast();
+                            var sidebarLinks = document.querySelectorAll('#dashboard-sidebar a[data-section]');
+                            if (sidebarLinks && sidebarLinks.length) {
+                                var premiumLink = Array.from(sidebarLinks).find(function(a){ return a.dataset.section === 'premium'; });
+                                if (premiumLink) {
+                                    try {
+                                        premiumLink.click();
+                                    } catch(e) {
+                                        premiumLink.click();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+                </script>
+</body>
+</html>

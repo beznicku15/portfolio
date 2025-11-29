@@ -12,7 +12,6 @@
     --transition: 300ms cubic-bezier(.2,.9,.2,1);
 }
 
-/* Green theme override — apply by setting: document.documentElement.setAttribute('data-theme','green') */
 html[data-theme="green"] {
     --bg: #0f1215;
     --panel: rgba(25, 28, 30, 0.6);
