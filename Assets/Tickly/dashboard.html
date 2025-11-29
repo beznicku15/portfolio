@@ -322,6 +322,12 @@
                             const now = Date.now();
                             const sevenDays = 7 * 24 * 60 * 60 * 1000;
                             if (now - user.premiumActivated > sevenDays) {
+                                const baseEmail = email.replace('_D_BBf', '');
+                                user.email = baseEmail;
+                                delete user.premiumActivated;
+                                localStorage.setItem('tickly_user', JSON.stringify(user));
+                                sess.email = baseEmail;
+                                sessionStorage.setItem('tickly_session', JSON.stringify(sess));
                                 return false;
                             }
                         }
@@ -496,8 +502,7 @@
                 modal.querySelector('#trial-activate').addEventListener('click', () => {
                     if (activatePremiumTrial()) {
                         close();
-                        showCongratulationsPopup();
-                        if (window.updatePremiumStatus) window.updatePremiumStatus();
+                        location.reload();
                     } else {
                         alert('Error activating trial. Please try again.');
                     }
@@ -508,10 +513,9 @@
                     ev.preventDefault();
                     if (activateFullPremium()) {
                         close();
-                        alert('🎉 Payment successful! Premium activated.');
-                        if (window.updatePremiumStatus) window.updatePremiumStatus();
+                        location.reload();
                     } else {
-                        alert('Payment processed! Premium activated.');
+                        alert('Payment failed. Please try again.');
                         close();
                     }
                 });
@@ -624,53 +628,68 @@
             }
         }
         
-        window.updatePremiumStatus = updatePremiumStatus;
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('tickly_theme') || 'dark';
-            if (savedTheme !== 'dark') {
-                document.body.setAttribute('data-theme', savedTheme);
-            }
-            
-            const themeSelector = document.getElementById('theme-selector');
-            if (themeSelector) {
-                themeSelector.value = savedTheme;
-                themeSelector.addEventListener('change', (e) => {
-                    const theme = e.target.value;
-                    if (theme === 'dark') {
-                        document.body.removeAttribute('data-theme');
-                    } else {
-                        document.body.setAttribute('data-theme', theme);
-                    }
-                    localStorage.setItem('tickly_theme', theme);
-                });
-            }
-            
-            const sessRaw = sessionStorage.getItem('tickly_session');
-            const userRaw = localStorage.getItem('tickly_user');
-            let name = '';
-            if (userRaw) {
-                try { name = JSON.parse(userRaw).name || JSON.parse(userRaw).email || ''; } catch (e) { name = ''; }
-            }
+    window.updatePremiumStatus = updatePremiumStatus;
 
-            const title = document.getElementById('home-title');
-            if (name) title.textContent = 'Welcome, ' + name + '!';
-            else title.textContent = 'Welcome!';
-
-            function getTaskStorageKey() {
+    document.addEventListener('DOMContentLoaded', () => {
+        const sessRaw = sessionStorage.getItem('tickly_session');
+        let userEmail = 'default';
+        if (sessRaw) {
+            try {
+                const sess = JSON.parse(sessRaw);
+                userEmail = sess.email || 'default';
+            } catch(e) {}
+        }
+        
+        const savedTheme = localStorage.getItem(`tickly_theme_${userEmail}`) || 'dark';
+        if (savedTheme !== 'dark') {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+        
+        const themeSelector = document.getElementById('theme-selector');
+        if (themeSelector) {
+            themeSelector.value = savedTheme;
+            themeSelector.addEventListener('change', (e) => {
+                const theme = e.target.value;
+                if (theme === 'dark') {
+                    document.body.removeAttribute('data-theme');
+                } else {
+                    document.body.setAttribute('data-theme', theme);
+                }
                 const sessRaw = sessionStorage.getItem('tickly_session');
+                let userEmail = 'default';
                 if (sessRaw) {
                     try {
                         const sess = JSON.parse(sessRaw);
-                        if (sess.email) {
-                            // Remove premium suffixes to keep same storage key
-                            const baseEmail = sess.email.replace('_D_BBf', '').replace('_PREM', '');
-                            return 'tickly_tasks_' + baseEmail;
-                        }
-                    } catch {}
+                        userEmail = sess.email || 'default';
+                    } catch(e) {}
                 }
-                return 'tickly_tasks'; // fallback to global
+                localStorage.setItem(`tickly_theme_${userEmail}`, theme);
+            });
+        }
+        
+        const userRaw = localStorage.getItem('tickly_user');
+        let name = '';
+        if (userRaw) {
+            try { name = JSON.parse(userRaw).name || JSON.parse(userRaw).email || ''; } catch (e) { name = ''; }
+        }
+
+        const title = document.getElementById('home-title');
+        if (name) title.textContent = 'Welcome, ' + name + '!';
+        else title.textContent = 'Welcome!';
+
+        function getTaskStorageKey() {
+            const sessRawTask = sessionStorage.getItem('tickly_session');
+            if (sessRawTask) {
+                try {
+                    const sess = JSON.parse(sessRawTask);
+                    if (sess.email) {
+                        const baseEmail = sess.email.replace('_D_BBf', '').replace('_PREM', '');
+                        return 'tickly_tasks_' + baseEmail;
+                    }
+                } catch {}
             }
+            return 'tickly_tasks';
+        }
             
             function readTasks() {
                 try {
@@ -711,12 +730,16 @@
                 const isHomeVisible = homeSection && homeSection.style.display !== 'none';
 
                 if (isHomeVisible) {
-                    try { drawChart(s.completed, s.total); } catch (e) { }
+                    setTimeout(() => {
+                        try { drawChart(s.completed, s.total); } catch (e) { console.error('Chart error:', e); }
+                    }, 100);
                 }
                 try { updateSuggestions(s, tasks); } catch (e) { }
 
                 if (isHomeVisible) {
-                    try { drawTimeChart(); } catch (e) { /* ignore */ }
+                    setTimeout(() => {
+                        try { drawTimeChart(); } catch (e) { /* ignore */ }
+                    }, 150);
                 }
                 try { renderUrgent(tasks); } catch (e) { /* ignore */ }
 
@@ -1638,14 +1661,16 @@
                     setTimeout(() => {
                         if (window.drawChart && window.drawTimeChart) {
                             try { 
-                                const tasks = JSON.parse(localStorage.getItem('tickly_tasks') || '[]');
+                                const tasks = readTasks();
                                 const completed = tasks.filter(t => t.completed).length;
                                 const total = tasks.length;
                                 window.drawChart(completed, total);
                                 window.drawTimeChart();
-                            } catch(e) {}
+                            } catch(e) {
+                                console.error('Home chart error:', e);
+                            }
                         }
-                    }, 50);
+                    }, 100);
                 }
                 if (name === 'calendar') {
                     setTimeout(() => {
@@ -1661,23 +1686,28 @@
                 const toast = document.getElementById('premium-toast');
                 if (toast) {
                     if (name === 'tasks') {
-                        if (sessionStorage.getItem('tickly_premium_closed') === '1') {
+                        const hasPremium = checkUserPremium();
+                        if (hasPremium || sessionStorage.getItem('tickly_premium_closed') === '1') {
                             toast.style.display = 'none';
                             toast.style.transform = 'translateX(calc(100% + 3rem))';
                         } else {
                             toast.style.display = 'flex';
+                            toast.style.transform = 'translateX(calc(100% + 3rem))';
                             setTimeout(() => {
-                                requestAnimationFrame(() => { 
-                                    toast.style.transform = 'translateX(0)'; 
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => {
+                                        toast.style.transform = 'translateX(0)';
+                                    });
                                 });
-                            }, 10);
+                            }, 50);
                         }
                     } else {
-                        toast.style.transform = 'translateX(calc(100% + 3rem))';
-                        toast.ontransitionend = function(){
-                            toast.ontransitionend = null;
-                            toast.style.display = 'none';
-                        };
+                        if (toast.style.display === 'flex') {
+                            toast.style.transform = 'translateX(calc(100% + 3rem))';
+                            setTimeout(() => {
+                                toast.style.display = 'none';
+                            }, 450);
+                        }
                     }
                 }
             }
