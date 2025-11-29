@@ -500,22 +500,26 @@
             if (isTrial) {
                 modal.querySelector('#trial-cancel').addEventListener('click', close);
                 modal.querySelector('#trial-activate').addEventListener('click', () => {
-                    if (activatePremiumTrial()) {
+                    const success = activatePremiumTrial();
+                    console.log('Trial activation result:', success);
+                    if (success) {
                         close();
-                        location.reload();
+                        setTimeout(() => showCongratulationsPopup(), 100);
                     } else {
-                        alert('Error activating trial. Please try again.');
+                        alert('Error activating trial. Please check console for details.');
                     }
                 });
             } else {
                 modal.querySelector('#payment-cancel').addEventListener('click', close);
                 modal.querySelector('#payment-form').addEventListener('submit', (ev) => {
                     ev.preventDefault();
-                    if (activateFullPremium()) {
+                    const success = activateFullPremium();
+                    console.log('Full premium activation result:', success);
+                    if (success) {
                         close();
-                        location.reload();
+                        setTimeout(() => showCongratulationsPopup(), 100);
                     } else {
-                        alert('Payment failed. Please try again.');
+                        alert('Payment failed. Please check console for details.');
                         close();
                     }
                 });
@@ -556,6 +560,7 @@
             
             modal.querySelector('#congrats-close').addEventListener('click', () => {
                 document.body.removeChild(overlay);
+                location.reload();
             });
             
             const style = document.createElement('style');
