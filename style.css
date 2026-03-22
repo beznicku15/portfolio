@@ -399,6 +399,58 @@ body {
     }
 }
 
+.latest-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.5);
+    animation: pulse-latest 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-latest {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.5);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 6px 30px rgba(76, 175, 80, 0.7);
+    }
+}
+
+.hot-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.5);
+    animation: pulse-hot 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-hot {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(33, 150, 243, 0.5);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 6px 30px rgba(33, 150, 243, 0.7);
+    }
+}
+
 .project-icon {
     height: 250px;
     display: flex;
