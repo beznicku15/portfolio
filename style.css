@@ -259,6 +259,10 @@ body {
     margin-bottom: 4rem;
 }
 
+.section-title.web-projects {
+    margin-top: 6rem;
+}
+
 .timeline-section {
     padding: 8rem 2rem;
     max-width: 1200px;
