@@ -161,12 +161,47 @@
             <strong data-i18n="projects.stack">Tech Stack:</strong> C++20, SFML 3.2, TCP Sockets, OOP
           </div>
           <div class="tags"><span class="tag">C++20</span><span class="tag">SFML</span><span class="tag">TCP</span></div>
+          <!--<div class="project-status"><span class="status-dot"></span><span data-i18n="projects.bank.status">Work in progress</span></div> -->
           <div class="project-links">
             <a href="https://github.com/heyitsbeznicku/Bank-system" target="_blank" data-i18n="projects.github">GitHub →</a>
           </div>
         </div>
       </div>
+
+      <!-- Photo to Ascii -->
+        <div class="project-card reveal">
+        <div class="project-card-inner">
+          <div class="project-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <h3 data-i18n="projects.ascii.title">Photo to Ascii</h3>
+          <div class="project-desc">
+            <strong data-i18n="projects.overview">Overview:</strong>
+            <span data-i18n="projects.ascii.overview">Image-to-ASCII converter in C++ that loads a photo, converts it to grayscale, and maps brightness values to characters from a dense ASCII palette.</span>
+            <br><br>
+            <strong data-i18n="projects.highlights">Highlights:</strong>
+            <ul>
+              <li data-i18n="projects.ascii.h1">Converts RGB pixels to luminance using the standard grayscale formula (0.299R + 0.587G + 0.114B)</li>
+              <li data-i18n="projects.ascii.h2">Scales the image to a chosen width and samples blocks of pixels to preserve the final ASCII aspect ratio</li>
+              <li data-i18n="projects.ascii.h3">Uses a custom ASCII character map for detailed brightness rendering and allows saving the result to a text file</li>
+            </ul>
+            <br>
+            <strong data-i18n="projects.stack">Tech Stack:</strong> C++20, stb_image, ASCII art generation
+          </div>
+          <div class="tags"><span class="tag">C++20</span><span class="tag">ASCII</span></div>
+          <div class="project-status"><span class="status-dot"></span><span data-i18n="projects.ascii.status">Work in progress: GUI + colors</span></div>
+          <div class="project-links">
+            <a href="https://github.com/heyitsbeznicku/Photo-to-Ascii" target="_blank" data-i18n="projects.github">GitHub →</a>
+          </div>
+        </div>
+      </div>
     </div>
+
+
+    </div>
+
 
     <!-- Web -->
     <hr class="divider">
@@ -195,7 +230,7 @@
       <!-- Fitness App -->
       <div class="project-card featured reveal">
         <div class="project-card-inner">
-          <div class="hot-badge" data-i18n="projects.latest">⭐ Latest Project</div>
+          <!--<div class="hot-badge" data-i18n="projects.latest">⭐ Latest Project</div> -->
           <div class="project-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -350,6 +385,14 @@ const translations = {
     "projects.bank.overview": " A client-server banking application showcasing custom binary protocol design and real-time network communication using SFML.",
     "projects.bank.h1": "Non-blocking I/O multiplexing (sf::SocketSelector) to handle concurrent client connections efficiently",
     "projects.bank.h2": "Account creation, session management, and structured packet serialization (sf::Packet)",
+    "projects.bank.status": "Work in progress",
+
+    "projects.ascii.title": "Photo to Ascii",
+    "projects.ascii.overview": " Image-to-ASCII converter in C++ that loads a photo, converts it to grayscale, and maps brightness values to characters from a dense ASCII palette.",
+    "projects.ascii.h1": "Converts RGB pixels to luminance using the standard grayscale formula (0.299R + 0.587G + 0.114B)",
+    "projects.ascii.h2": "Scales the image to a chosen width and samples blocks of pixels to preserve the final ASCII aspect ratio",
+    "projects.ascii.h3": "Uses a custom ASCII character map for detailed brightness rendering and allows saving the result to a text file",
+    "projects.ascii.status": "Work in progress: GUI + colors",
 
     "projects.admin.title": "Admin Panel",
     "projects.admin.desc":  "Modern fully responsive admin panel for managing a Discord bot with advanced features and a clean UI.",
@@ -419,6 +462,14 @@ const translations = {
     "projects.bank.overview": " Aplikacja klient-serwer demonstrujące własny projekt protokołu binarnego i komunikację sieciową w czasie rzeczywistym przez SFML.",
     "projects.bank.h1": "Nieblokujące multipleksowanie I/O (sf::SocketSelector) do obsługi wielu klientów jednocześnie",
     "projects.bank.h2": "Tworzenie kont, zarządzanie sesjami i serializacja pakietów (sf::Packet)",
+
+    "projects.ascii.title": "Photo to Ascii",
+    "projects.ascii.overview": " Konwerter obrazu do ASCII w C++, który ładuje zdjęcie, zamienia je na skalę szarości i mapuje jasność na znaki z gęstej palety ASCII.",
+    "projects.ascii.h1": "Przekształca piksele RGB na luminancję przy użyciu standardowego wzoru na skalę szarości (0.299R + 0.587G + 0.114B)",
+    "projects.ascii.h2": "Skaluje obraz do wybranej szerokości i próbuje bloki pikseli, aby zachować proporcje ASCII",
+    "projects.ascii.h3": "Używa niestandardowej mapy znaków ASCII dla szczegółowego odczytu jasności i pozwala zapisać wynik do pliku tekstowego",
+    "projects.ascii.status": "Praca w toku: GUI + kolory",
+    "projects.bank.status": "Praca w toku",
 
     "projects.admin.title": "Panel Administracyjny",
     "projects.admin.desc":  "Nowoczesny w pełni responsywny panel administracyjny do zarządzania botem Discord z rozbudowanymi funkcjami i czystym interfejsem.",
